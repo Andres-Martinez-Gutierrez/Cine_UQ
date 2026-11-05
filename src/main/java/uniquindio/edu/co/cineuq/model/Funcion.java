@@ -1,0 +1,151 @@
+package uniquindio.edu.co.cineuq.model;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+public class Funcion {
+    private static final int ASIENTOS_POR_FILA = 10;
+
+    private String codigo;
+    private Pelicula pelicula;
+    private Sala sala;
+    private LocalDate fecha;
+    private LocalTime horaInicio;
+    private double valorBase;
+    private EstadoFuncion estado;
+    private List<AsientoFuncion> asientos;
+
+    /**
+     * Constructor vacío de la clase Funcion.
+     * Deja el estado en PROGRAMADA y la lista de asientos vacía; los demás atributos se asignan con los setters.
+     */
+    public Funcion() {
+        this.estado = EstadoFuncion.PROGRAMADA;
+        this.asientos = new ArrayList<>();
+    }
+
+    /**
+     * Constructor de la clase Funcion. Además genera un AsientoFuncion por cada asiento de la sala.
+     *
+     * @param codigo código de la función
+     * @param pelicula película que se proyecta
+     * @param sala sala en la que se realiza la función
+     * @param fecha fecha en que se realiza la función
+     * @param horaInicio hora a la que empieza la función
+     * @param valorBase valor base de la función
+     */
+    public Funcion(String codigo, Pelicula pelicula, Sala sala, LocalDate fecha, LocalTime horaInicio, double valorBase) {
+        this();
+        this.codigo = codigo;
+        this.pelicula = pelicula;
+        this.sala = sala;
+        this.fecha = fecha;
+        this.horaInicio = horaInicio;
+        this.valorBase = valorBase;
+        for (int i = 0; i < sala.getCapacidad(); i++) {
+            char fila = (char) ('A' + i / ASIENTOS_POR_FILA);
+            int numero = i % ASIENTOS_POR_FILA + 1;
+            asientos.add(new AsientoFuncion(new Asiento("" + fila + numero, fila, numero)));
+        }
+    }
+
+    public int asientosDisponibles() {
+        return (int) asientos.stream().filter(AsientoFuncion::estaDisponible).count();
+    }
+
+    public int asientosOcupados() {
+        return asientos.size() - asientosDisponibles();
+    }
+
+    /** Porcentaje de asientos ocupados (0 a 100). */
+    public double porcentajeOcupacion() {
+        if (asientos.isEmpty()) return 0;
+        return asientosOcupados() * 100.0 / asientos.size();
+    }
+
+    public AsientoFuncion buscarAsiento(String codigoAsiento) {
+        for (AsientoFuncion af : asientos) {
+            if (af.getAsiento().getCodigo().equals(codigoAsiento)) return af;
+        }
+        return null;
+    }
+
+    public LocalTime getHoraFin() {
+        return horaInicio.plusMinutes(pelicula.getDuracionMinutos());
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public Pelicula getPelicula() {
+        return pelicula;
+    }
+
+    public void setPelicula(Pelicula pelicula) {
+        this.pelicula = pelicula;
+    }
+
+    public Sala getSala() {
+        return sala;
+    }
+
+    public void setSala(Sala sala) {
+        this.sala = sala;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public LocalTime getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(LocalTime horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public double getValorBase() {
+        return valorBase;
+    }
+
+    public void setValorBase(double valorBase) {
+        this.valorBase = valorBase;
+    }
+
+    public EstadoFuncion getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoFuncion estado) {
+        this.estado = estado;
+    }
+
+    public List<AsientoFuncion> getAsientos() {
+        return Collections.unmodifiableList(asientos);
+    }
+
+    public void setAsientos(List<AsientoFuncion> asientos) {
+        this.asientos = new ArrayList<>(asientos);
+    }
+
+    @Override
+    public String toString() {
+        return "Funcion{codigo='" + codigo + "', pelicula=" + (pelicula == null ? null : pelicula.getCodigo())
+                + ", sala=" + (sala == null ? null : sala.getCodigo()) + ", fecha=" + fecha
+                + ", horaInicio=" + horaInicio + ", valorBase=" + valorBase + ", estado=" + estado
+                + ", asientos=" + asientos.size() + "}";
+    }
+}
