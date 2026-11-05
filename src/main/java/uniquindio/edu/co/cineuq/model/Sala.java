@@ -31,6 +31,7 @@ public class Sala {
         this.tipo = tipo;
     }
 
+    /** Marca la sala como fuera de servicio. */
     public void deshabilitar() {
         estado = EstadoSala.FUERA_DE_SERVICIO;
     }

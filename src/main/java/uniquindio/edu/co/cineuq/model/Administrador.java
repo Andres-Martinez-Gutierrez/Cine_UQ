@@ -33,10 +33,12 @@ public class Administrador extends Usuario {
     public void gestionarSalas() {
     }
 
+    /** Programa una función en el cine, validando que no se traslape con otra de la misma sala. */
     public void programarFuncion(Funcion funcion) throws CinemaUQException {
         cinema.programarFuncion(funcion);
     }
 
+    /** Actualiza el valor de la tarifa del tipo de cliente indicado. */
     public void cambiarTarifa(TipoCliente tipo, double valor) {
         cinema.buscarTarifa(tipo).actualizarValor(valor);
     }

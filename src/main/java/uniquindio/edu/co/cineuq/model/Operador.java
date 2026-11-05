@@ -56,14 +56,17 @@ public class Operador extends Usuario {
         return venta;
     }
 
+    /** Cancela la venta indicada y libera sus asientos. */
     public void cancelarVenta(Venta venta) {
         venta.cancelar();
     }
 
+    /** Devuelve las funciones programadas para la fecha indicada. */
     public List<Funcion> funcionesDia(LocalDate fecha) {
         return cinema.funcionesDia(fecha);
     }
 
+    /** Genera un código único para una nueva venta. */
     private String generarCodigo() {
         return "V" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }

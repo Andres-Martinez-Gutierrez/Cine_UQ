@@ -31,6 +31,7 @@ public class Pelicula {
         this.duracionMinutos = duracionMinutos;
     }
 
+    /** Marca la película como no disponible. */
     public void deshabilitar() {
         estado = EstadoPelicula.NO_DISPONIBLE;
     }

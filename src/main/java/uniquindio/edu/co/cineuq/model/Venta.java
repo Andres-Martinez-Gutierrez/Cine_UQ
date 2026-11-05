@@ -43,15 +43,18 @@ public class Venta {
         this.cobro = cobro;
     }
 
+    /** Agrega un asiento vendido a la venta. */
     void agregarAsiento(AsientoFuncion asiento) {
         asientos.add(asiento);
     }
 
+    /** Agrega un producto a la venta y suma su precio al cobro. */
     public void agregarProducto(Producto producto) {
         productos.add(producto);
         cobro.agregarValorProductos(producto.getPrecio());
     }
 
+    /** Cancela la venta y libera sus asientos. No hace nada si ya estaba cancelada. */
     public void cancelar() {
         if (estado == EstadoVenta.CANCELADA) return;
         estado = EstadoVenta.CANCELADA;

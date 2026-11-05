@@ -28,6 +28,7 @@ public class Producto {
         this.categoria = categoria;
     }
 
+    /** Actualiza el precio unitario del producto. */
     public void actualizarPrecio(double nuevoPrecio) {
         this.precio = nuevoPrecio;
     }

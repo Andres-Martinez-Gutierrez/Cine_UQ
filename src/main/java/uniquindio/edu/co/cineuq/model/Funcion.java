@@ -52,10 +52,12 @@ public class Funcion {
         }
     }
 
+    /** Devuelve la cantidad de asientos disponibles para la venta. */
     public int asientosDisponibles() {
         return (int) asientos.stream().filter(AsientoFuncion::estaDisponible).count();
     }
 
+    /** Devuelve la cantidad de asientos ocupados. */
     public int asientosOcupados() {
         return asientos.size() - asientosDisponibles();
     }
@@ -66,6 +68,7 @@ public class Funcion {
         return asientosOcupados() * 100.0 / asientos.size();
     }
 
+    /** Busca un asiento de la función por su código (por ejemplo "A5"). Devuelve null si no existe. */
     public AsientoFuncion buscarAsiento(String codigoAsiento) {
         for (AsientoFuncion af : asientos) {
             if (af.getAsiento().getCodigo().equals(codigoAsiento)) return af;

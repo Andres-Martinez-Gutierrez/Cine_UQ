@@ -24,6 +24,7 @@ public class AsientoFuncion {
         this.asiento = asiento;
     }
 
+    /** Marca el asiento como ocupado. Lanza AsientoOcupadoException si ya estaba ocupado. */
     public void ocupar() throws AsientoOcupadoException {
         if (estado == EstadoAsiento.OCUPADO) {
             throw new AsientoOcupadoException("El asiento " + asiento.getCodigo() + " ya está ocupado");
@@ -31,10 +32,12 @@ public class AsientoFuncion {
         estado = EstadoAsiento.OCUPADO;
     }
 
+    /** Marca el asiento como disponible nuevamente. */
     public void liberar() {
         estado = EstadoAsiento.DISPONIBLE;
     }
 
+    /** Indica si el asiento está disponible para la venta. */
     public boolean estaDisponible() {
         return estado == EstadoAsiento.DISPONIBLE;
     }

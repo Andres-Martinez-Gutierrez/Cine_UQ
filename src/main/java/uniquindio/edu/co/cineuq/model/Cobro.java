@@ -26,6 +26,7 @@ public class Cobro {
         this.descuentoCliente = descuentoCliente;
     }
 
+    /** Suma al cobro el valor de un producto agregado a la venta. */
     public void agregarValorProductos(double valor) {
         this.valorProductos += valor;
     }

@@ -22,6 +22,7 @@ public class Tarifa {
         this.valor = valor;
     }
 
+    /** Actualiza el valor de la entrada para el tipo de cliente de esta tarifa. */
     public void actualizarValor(double nuevoValor) {
         this.valor = nuevoValor;
     }

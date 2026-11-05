@@ -25,6 +25,7 @@ public abstract class Usuario {
         this.nombre = nombre;
     }
 
+    /** Verifica que el usuario y la contraseña coincidan con los de este usuario. */
     public boolean autenticar(String usuario, String contrasena) {
         return this.usuario.equals(usuario) && this.contrasena.equals(contrasena);
     }

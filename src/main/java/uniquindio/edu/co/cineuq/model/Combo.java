@@ -31,11 +31,13 @@ public class Combo extends Producto {
         this.productos = new ArrayList<>(productos);
     }
 
+    /** Calcula el precio del combo: la suma de sus productos menos el descuento. */
     public double calcularPrecio() {
         double suma = productos.stream().mapToDouble(Producto::getPrecio).sum();
         return suma * (1 - descuento);
     }
 
+    /** Devuelve el precio del combo, calculado a partir de sus productos y el descuento. */
     @Override
     public double getPrecio() {
         return calcularPrecio();

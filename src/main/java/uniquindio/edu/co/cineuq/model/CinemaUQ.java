@@ -51,6 +51,7 @@ public class CinemaUQ {
         this.nit = nit;
     }
 
+    /** Registra una película en el cine. Lanza PeliculaDuplicadaException si ya existe una con el mismo código. */
     public void registrarPelicula(Pelicula pelicula) throws PeliculaDuplicadaException {
         for (Pelicula p : peliculas) {
             if (p.getCodigo().equals(pelicula.getCodigo())) {
@@ -60,6 +61,7 @@ public class CinemaUQ {
         peliculas.add(pelicula);
     }
 
+    /** Registra una sala en el cine. Lanza SalaDuplicadaException si ya existe una con el mismo código. */
     public void registrarSala(Sala sala) throws SalaDuplicadaException {
         for (Sala s : salas) {
             if (s.getCodigo().equals(sala.getCodigo())) {
@@ -89,10 +91,12 @@ public class CinemaUQ {
         funciones.add(funcion);
     }
 
+    /** Agrega una venta al historial del cine. */
     public void registrarVenta(Venta venta) {
         ventas.add(venta);
     }
 
+    /** Busca una venta por su código. Lanza VentaNoEncontradaException si no existe. */
     public Venta buscarVenta(String codigo) throws VentaNoEncontradaException {
         for (Venta v : ventas) {
             if (v.getCodigo().equals(codigo)) return v;
@@ -100,6 +104,7 @@ public class CinemaUQ {
         throw new VentaNoEncontradaException("No existe la venta " + codigo);
     }
 
+    /** Devuelve el número total de asientos vendidos en ventas activas. */
     public int totalEntradasVendidas() {
         return ventas.stream()
                 .filter(v -> v.getEstado() == EstadoVenta.ACTIVA)
@@ -107,6 +112,7 @@ public class CinemaUQ {
                 .sum();
     }
 
+    /** Devuelve el total recaudado por las ventas activas. */
     public double totalIngresos() {
         return ventas.stream()
                 .filter(v -> v.getEstado() == EstadoVenta.ACTIVA)
@@ -127,14 +133,17 @@ public class CinemaUQ {
                 .orElse(null);
     }
 
+    /** Devuelve el porcentaje de ocupación de la función indicada (0 a 100). */
     public double porcentajeOcupacion(Funcion funcion) {
         return funcion.porcentajeOcupacion();
     }
 
+    /** Devuelve las funciones programadas para la fecha indicada. */
     public List<Funcion> funcionesDia(LocalDate fecha) {
         return funciones.stream().filter(f -> f.getFecha().equals(fecha)).toList();
     }
 
+    /** Busca una función por su código. Lanza FuncionNoEncontradaException si no existe. */
     public Funcion buscarFuncion(String codigo) throws FuncionNoEncontradaException {
         for (Funcion f : funciones) {
             if (f.getCodigo().equals(codigo)) return f;
@@ -142,6 +151,7 @@ public class CinemaUQ {
         throw new FuncionNoEncontradaException("No existe la función " + codigo);
     }
 
+    /** Devuelve la tarifa del tipo de cliente indicado. Lanza IllegalStateException si no existe. */
     public Tarifa buscarTarifa(TipoCliente tipo) {
         for (Tarifa t : tarifas) {
             if (t.getTipoCliente() == tipo) return t;
