@@ -1,11 +1,15 @@
 package uniquindio.edu.co.cineuq.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Sala {
     private String codigo;
     private String nombre;
     private int capacidad;
     private TipoSala tipo;
     private EstadoSala estado;
+    private List<Asiento> listasientos;
 
     /**
      * Constructor vacío de la clase Sala.
@@ -29,6 +33,7 @@ public class Sala {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tipo = tipo;
+        this.listasientos = new ArrayList<>();
     }
 
     /** Marca la sala como fuera de servicio. */
@@ -84,6 +89,14 @@ public class Sala {
 
     public void setEstado(EstadoSala estado) {
         this.estado = estado;
+    }
+
+    public List<Asiento> getListasientos() {
+        return listasientos;
+    }
+
+    public void setListasientos(List<Asiento> listasientos) {
+        this.listasientos = listasientos;
     }
 
     @Override
