@@ -36,7 +36,7 @@ class CinemaUQTest {
     }
 
     private Venta venta(String codigo, Funcion funcion, Cobro cobro) {
-        return new Venta(codigo, LocalDateTime.now(), new Cliente("1", "Ana", TipoCliente.GENERAL), funcion, cobro);
+        return new Venta(EstadoVenta.ACTIVA, cobro, funcion, new Cliente("1", "Ana", TipoCliente.GENERAL), LocalDateTime.now(), codigo);
     }
 
     @Test
@@ -141,10 +141,10 @@ class CinemaUQTest {
     void totalEntradasVendidasCuentaSoloAsientosDeVentasActivas() {
         Funcion funcion = funcion("F1", sala, FECHA, LocalTime.of(14, 0));
         Venta activa = venta("V1", funcion, new Cobro(10000, 0, 0));
-        activa.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1)));
-        activa.agregarAsiento(new AsientoFuncion(null, new Asiento("A2", 'A', 2)));
+        activa.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1, null)));
+        activa.agregarAsiento(new AsientoFuncion(null, new Asiento("A2", 'A', 2, null)));
         Venta cancelada = venta("V2", funcion, new Cobro(10000, 0, 0));
-        cancelada.agregarAsiento(new AsientoFuncion(null, new Asiento("A3", 'A', 3)));
+        cancelada.agregarAsiento(new AsientoFuncion(null, new Asiento("A3", 'A', 3, null)));
         cancelada.cancelar();
         cinema.registrarVenta(activa);
         cinema.registrarVenta(cancelada);
@@ -177,10 +177,10 @@ class CinemaUQTest {
         Funcion funcionPrincipal = funcion("F1", sala, FECHA, LocalTime.of(14, 0));
         Funcion funcionOtra = new Funcion("F2", otra, sala, FECHA, LocalTime.of(18, 0), 10000);
         Venta v1 = venta("V1", funcionPrincipal, new Cobro(10000, 0, 0));
-        v1.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1)));
+        v1.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1, null)));
         Venta v2 = venta("V2", funcionOtra, new Cobro(10000, 0, 0));
-        v2.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1)));
-        v2.agregarAsiento(new AsientoFuncion(null, new Asiento("A2", 'A', 2)));
+        v2.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1, null)));
+        v2.agregarAsiento(new AsientoFuncion(null, new Asiento("A2", 'A', 2, null)));
         cinema.registrarVenta(v1);
         cinema.registrarVenta(v2);
 

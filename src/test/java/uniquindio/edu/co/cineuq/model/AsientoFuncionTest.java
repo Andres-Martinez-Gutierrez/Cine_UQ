@@ -14,7 +14,7 @@ class AsientoFuncionTest {
 
     @BeforeEach
     void setUp() {
-        asientoFuncion = new AsientoFuncion(null, new Asiento("A1", 'A', 1));
+        asientoFuncion = new AsientoFuncion(null, new Asiento("A1", 'A', 1, null));
     }
 
     @Test

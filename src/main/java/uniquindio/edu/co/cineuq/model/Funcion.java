@@ -54,7 +54,7 @@ public class Funcion {
         for (int i = 0; i < sala.getCapacidad(); i++) {
             char fila = (char) ('A' + i / ASIENTOS_POR_FILA);
             int numero = i % ASIENTOS_POR_FILA + 1;
-            listFuncionAsientofun.add(new AsientoFuncion(null, new Asiento("" + fila + numero, fila, numero)));
+            listFuncionAsientofun.add(new AsientoFuncion(null, new Asiento("" + fila + numero, fila, numero, null)));
         }
     }
 

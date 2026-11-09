@@ -3,6 +3,7 @@ package uniquindio.edu.co.cineuq.model;
 import uniquindio.edu.co.cineuq.exception.CinemaUQException;
 import uniquindio.edu.co.cineuq.exception.SinAsientosDisponiblesException;
 import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoFuncion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoVenta;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -51,7 +52,7 @@ public class Operador extends Usuario {
 
         double valorEntrada = cinema.buscarTarifa(cliente.getTipo()).getValor();
         Cobro cobro = new Cobro(valorEntrada, funcion.getSala().recargo(), 0);
-        Venta venta = new Venta(generarCodigo(), LocalDateTime.now(), cliente, funcion, cobro);
+        Venta venta = new Venta(EstadoVenta.ACTIVA, cobro, funcion, cliente, LocalDateTime.now(), generarCodigo());
         venta.agregarAsiento(asiento);
         cinema.registrarVenta(venta);
         return venta;

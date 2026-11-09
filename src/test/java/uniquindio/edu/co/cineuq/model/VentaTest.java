@@ -20,7 +20,8 @@ class VentaTest {
     @BeforeEach
     void setUp() {
         Cobro cobro = new Cobro(10000, 0, 0);
-        venta = new Venta("V1", LocalDateTime.now(), new Cliente("1", "Ana", TipoCliente.GENERAL), null, cobro);
+        Cliente cliente = new Cliente("1", "Ana", TipoCliente.GENERAL);
+        venta = new Venta(EstadoVenta.ACTIVA, cobro, null, cliente, LocalDateTime.now(), "V1");
     }
 
     @Test
@@ -33,7 +34,7 @@ class VentaTest {
 
     @Test
     void agregarAsientoAgregaElAsientoALaVenta() {
-        venta.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1)));
+        venta.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1, null)));
 
         assertEquals(1, venta.getAsientos().size());
     }
@@ -47,7 +48,7 @@ class VentaTest {
 
     @Test
     void cancelarLiberaLosAsientosDeLaVenta() throws Exception {
-        AsientoFuncion asiento = new AsientoFuncion(null, new Asiento("A1", 'A', 1));
+        AsientoFuncion asiento = new AsientoFuncion(null, new Asiento("A1", 'A', 1, null));
         asiento.ocupar();
         venta.agregarAsiento(asiento);
 
@@ -58,7 +59,7 @@ class VentaTest {
 
     @Test
     void cancelarUnaVentaYaCanceladaNoTieneEfecto() throws Exception {
-        AsientoFuncion asiento = new AsientoFuncion(null, new Asiento("A1", 'A', 1));
+        AsientoFuncion asiento = new AsientoFuncion(null, new Asiento("A1", 'A', 1, null));
         venta.agregarAsiento(asiento);
         venta.cancelar();
         asiento.ocupar();
