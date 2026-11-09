@@ -9,14 +9,18 @@ import java.util.List;
 public class Funcion {
     private static final int ASIENTOS_POR_FILA = 10;
 
+    //Atributos de la clase Funcion
     private String codigo;
-    private Pelicula pelicula;
-    private Sala sala;
     private LocalDate fecha;
     private LocalTime horaInicio;
     private double valorBase;
+
+    //Relaciones de la clase Funcion
     private EstadoFuncion estado;
-    private List<AsientoFuncion> asientos;
+    private List<AsientoFuncion> listFuncionAsientofun;
+    private Sala sala;
+    private Pelicula pelicula;
+    private List<Venta> listFuncionVenta;
 
     /**
      * Constructor vacío de la clase Funcion.
@@ -24,7 +28,8 @@ public class Funcion {
      */
     public Funcion() {
         this.estado = EstadoFuncion.PROGRAMADA;
-        this.asientos = new ArrayList<>();
+        this.listFuncionAsientofun = new ArrayList<>();
+        this.listFuncionVenta = new ArrayList<>();
     }
 
     /**
@@ -48,29 +53,29 @@ public class Funcion {
         for (int i = 0; i < sala.getCapacidad(); i++) {
             char fila = (char) ('A' + i / ASIENTOS_POR_FILA);
             int numero = i % ASIENTOS_POR_FILA + 1;
-            asientos.add(new AsientoFuncion(new Asiento("" + fila + numero, fila, numero)));
+            listFuncionAsientofun.add(new AsientoFuncion(null, new Asiento("" + fila + numero, fila, numero)));
         }
     }
 
     /** Devuelve la cantidad de asientos disponibles para la venta. */
     public int asientosDisponibles() {
-        return (int) asientos.stream().filter(AsientoFuncion::estaDisponible).count();
+        return (int) listFuncionAsientofun.stream().filter(AsientoFuncion::estaDisponible).count();
     }
 
     /** Devuelve la cantidad de asientos ocupados. */
     public int asientosOcupados() {
-        return asientos.size() - asientosDisponibles();
+        return listFuncionAsientofun.size() - asientosDisponibles();
     }
 
     /** Porcentaje de asientos ocupados (0 a 100). */
     public double porcentajeOcupacion() {
-        if (asientos.isEmpty()) return 0;
-        return asientosOcupados() * 100.0 / asientos.size();
+        if (listFuncionAsientofun.isEmpty()) return 0;
+        return asientosOcupados() * 100.0 / listFuncionAsientofun.size();
     }
 
     /** Busca un asiento de la función por su código (por ejemplo "A5"). Devuelve null si no existe. */
     public AsientoFuncion buscarAsiento(String codigoAsiento) {
-        for (AsientoFuncion af : asientos) {
+        for (AsientoFuncion af : listFuncionAsientofun) {
             if (af.getAsiento().getCodigo().equals(codigoAsiento)) return af;
         }
         return null;
@@ -136,12 +141,20 @@ public class Funcion {
         this.estado = estado;
     }
 
-    public List<AsientoFuncion> getAsientos() {
-        return Collections.unmodifiableList(asientos);
+    public List<AsientoFuncion> getListFuncionAsientofun() {
+        return listFuncionAsientofun;
     }
 
-    public void setAsientos(List<AsientoFuncion> asientos) {
-        this.asientos = new ArrayList<>(asientos);
+    public void setListFuncionAsientofun(List<AsientoFuncion> listFuncionAsientofun) {
+        this.listFuncionAsientofun = listFuncionAsientofun;
+    }
+
+    public List<Venta> getListFuncionVenta() {
+        return listFuncionVenta;
+    }
+
+    public void setListFuncionVenta(List<Venta> listFuncionVenta) {
+        this.listFuncionVenta = listFuncionVenta;
     }
 
     @Override
@@ -149,6 +162,6 @@ public class Funcion {
         return "Funcion{codigo='" + codigo + "', pelicula=" + (pelicula == null ? null : pelicula.getCodigo())
                 + ", sala=" + (sala == null ? null : sala.getCodigo()) + ", fecha=" + fecha
                 + ", horaInicio=" + horaInicio + ", valorBase=" + valorBase + ", estado=" + estado
-                + ", asientos=" + asientos.size() + "}";
+                + ", asientos=" + listFuncionAsientofun.size() + "}";
     }
 }

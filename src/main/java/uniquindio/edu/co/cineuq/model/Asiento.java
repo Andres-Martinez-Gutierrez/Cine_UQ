@@ -1,9 +1,16 @@
 package uniquindio.edu.co.cineuq.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Asiento {
+    //Atributos de la clase Asiento
     private String codigo;
     private char fila;
     private int numero;
+
+    //Relaciones de la clase Asiento
+    private List<Asiento> listAsientofunAsiento;
 
     /**
      * Constructor vacío de la clase Asiento.
@@ -23,6 +30,7 @@ public class Asiento {
         this.codigo = codigo;
         this.fila = fila;
         this.numero = numero;
+        this.listAsientofunAsiento = new ArrayList<>();
     }
 
     public String getCodigo() {
@@ -47,6 +55,14 @@ public class Asiento {
 
     public void setNumero(int numero) {
         this.numero = numero;
+    }
+
+    public List<Asiento> getListAsientofunAsiento() {
+        return listAsientofunAsiento;
+    }
+
+    public void setListAsientofunAsiento(List<Asiento> listAsientofunAsiento) {
+        this.listAsientofunAsiento = listAsientofunAsiento;
     }
 
     @Override
