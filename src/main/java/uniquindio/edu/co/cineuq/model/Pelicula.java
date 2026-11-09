@@ -6,6 +6,7 @@ public class Pelicula {
     private Genero genero;
     private int duracionMinutos;
     private EstadoPelicula estado;
+    private Clasificacion clasificacion;
 
     /**
      * Constructor vacío de la clase Pelicula.
@@ -23,12 +24,13 @@ public class Pelicula {
      * @param genero género cinematográfico de la película
      * @param duracionMinutos duración de la película en minutos
      */
-    public Pelicula(String codigo, String nombre, Genero genero, int duracionMinutos) {
+    public Pelicula(String codigo, String nombre, Genero genero, int duracionMinutos, Clasificacion clasificacion) {
         this();
         this.codigo = codigo;
         this.nombre = nombre;
         this.genero = genero;
         this.duracionMinutos = duracionMinutos;
+        this.clasificacion = clasificacion;
     }
 
     /** Marca la película como no disponible. */
@@ -74,6 +76,14 @@ public class Pelicula {
 
     public void setEstado(EstadoPelicula estado) {
         this.estado = estado;
+    }
+
+    public Clasificacion getClasificacion() {
+        return clasificacion;
+    }
+
+    public void setClasificacion(Clasificacion clasificacion) {
+        this.clasificacion = clasificacion;
     }
 
     @Override

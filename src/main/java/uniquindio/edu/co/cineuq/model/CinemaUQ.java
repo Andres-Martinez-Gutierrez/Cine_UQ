@@ -13,27 +13,34 @@ import java.util.List;
 import java.util.Map;
 
 public class CinemaUQ {
+    //Atributos de la clase CinemaUQ
     private String nombre;
     private String direccion;
     private String nit;
-    private List<Pelicula> peliculas;
-    private List<Sala> salas;
-    private List<Funcion> funciones;
-    private List<Venta> ventas;
-    private List<Tarifa> tarifas;
+
+    //Relaciones de la clase CinemaUQ
+    private List<Pelicula> listCinemaPeliculas;
+    private List<Sala> listCinemaSalas;
+    private List<Funcion> listCinemaFunciones;
+    private List<Venta> listCinemaVentas;
+    private List<Tarifa> listCinemaTarifas;
+    private List<Usuario> listCinemaUsuarios;
+    private List<Cliente> listCinemaClientes;
 
     /**
      * Constructor vacío de la clase CinemaUQ.
      * Inicializa las listas y crea una tarifa en cero por cada tipo de cliente.
      */
     public CinemaUQ() {
-        this.peliculas = new ArrayList<>();
-        this.salas = new ArrayList<>();
-        this.funciones = new ArrayList<>();
-        this.ventas = new ArrayList<>();
-        this.tarifas = new ArrayList<>();
+        this.listCinemaPeliculas = new ArrayList<>();
+        this.listCinemaSalas = new ArrayList<>();
+        this.listCinemaFunciones = new ArrayList<>();
+        this.listCinemaVentas = new ArrayList<>();
+        this.listCinemaTarifas = new ArrayList<>();
+        this.listCinemaUsuarios = new ArrayList<>();
+        this.listCinemaClientes = new ArrayList<>();
         for (TipoCliente tipo : TipoCliente.values()) {
-            tarifas.add(new Tarifa(tipo, 0));
+            listCinemaTarifas.add(new Tarifa(tipo, 0));
         }
     }
 
@@ -53,22 +60,22 @@ public class CinemaUQ {
 
     /** Registra una película en el cine. Lanza PeliculaDuplicadaException si ya existe una con el mismo código. */
     public void registrarPelicula(Pelicula pelicula) throws PeliculaDuplicadaException {
-        for (Pelicula p : peliculas) {
+        for (Pelicula p : listCinemaPeliculas) {
             if (p.getCodigo().equals(pelicula.getCodigo())) {
                 throw new PeliculaDuplicadaException("Ya existe la película " + pelicula.getCodigo());
             }
         }
-        peliculas.add(pelicula);
+        listCinemaPeliculas.add(pelicula);
     }
 
     /** Registra una sala en el cine. Lanza SalaDuplicadaException si ya existe una con el mismo código. */
     public void registrarSala(Sala sala) throws SalaDuplicadaException {
-        for (Sala s : salas) {
+        for (Sala s : listCinemaSalas) {
             if (s.getCodigo().equals(sala.getCodigo())) {
                 throw new SalaDuplicadaException("Ya existe la sala " + sala.getCodigo());
             }
         }
-        salas.add(sala);
+        listCinemaSalas.add(sala);
     }
 
     /** No se programa en una sala fuera de servicio ni se traslapa con otra función de la misma sala. */
@@ -77,7 +84,7 @@ public class CinemaUQ {
         if (sala.getEstado() == EstadoSala.FUERA_DE_SERVICIO) {
             throw new SalaNoDisponibleException("La sala " + sala.getCodigo() + " está fuera de servicio");
         }
-        for (Funcion otra : funciones) {
+        for (Funcion otra : listCinemaFunciones) {
             if (otra.getEstado() == EstadoFuncion.CANCELADA) continue;
             if (!otra.getSala().getCodigo().equals(sala.getCodigo())) continue;
             if (!otra.getFecha().equals(funcion.getFecha())) continue;
@@ -88,17 +95,17 @@ public class CinemaUQ {
                         + " ya tiene la función " + otra.getCodigo() + " en ese horario");
             }
         }
-        funciones.add(funcion);
+        listCinemaFunciones.add(funcion);
     }
 
     /** Agrega una venta al historial del cine. */
     public void registrarVenta(Venta venta) {
-        ventas.add(venta);
+        listCinemaVentas.add(venta);
     }
 
     /** Busca una venta por su código. Lanza VentaNoEncontradaException si no existe. */
     public Venta buscarVenta(String codigo) throws VentaNoEncontradaException {
-        for (Venta v : ventas) {
+        for (Venta v : listCinemaVentas) {
             if (v.getCodigo().equals(codigo)) return v;
         }
         throw new VentaNoEncontradaException("No existe la venta " + codigo);
@@ -106,7 +113,7 @@ public class CinemaUQ {
 
     /** Devuelve el número total de asientos vendidos en ventas activas. */
     public int totalEntradasVendidas() {
-        return ventas.stream()
+        return listCinemaVentas.stream()
                 .filter(v -> v.getEstado() == EstadoVenta.ACTIVA)
                 .mapToInt(v -> v.getAsientos().size())
                 .sum();
@@ -114,7 +121,7 @@ public class CinemaUQ {
 
     /** Devuelve el total recaudado por las ventas activas. */
     public double totalIngresos() {
-        return ventas.stream()
+        return listCinemaVentas.stream()
                 .filter(v -> v.getEstado() == EstadoVenta.ACTIVA)
                 .mapToDouble(Venta::getTotal)
                 .sum();
@@ -123,7 +130,7 @@ public class CinemaUQ {
     /** Película con más entradas vendidas en ventas activas; null si no hay ventas. */
     public Pelicula peliculaMasVendida() {
         Map<Pelicula, Integer> entradas = new HashMap<>();
-        for (Venta v : ventas) {
+        for (Venta v : listCinemaVentas) {
             if (v.getEstado() != EstadoVenta.ACTIVA) continue;
             entradas.merge(v.getFuncion().getPelicula(), v.getAsientos().size(), Integer::sum);
         }
@@ -140,12 +147,12 @@ public class CinemaUQ {
 
     /** Devuelve las funciones programadas para la fecha indicada. */
     public List<Funcion> funcionesDia(LocalDate fecha) {
-        return funciones.stream().filter(f -> f.getFecha().equals(fecha)).toList();
+        return listCinemaFunciones.stream().filter(f -> f.getFecha().equals(fecha)).toList();
     }
 
     /** Busca una función por su código. Lanza FuncionNoEncontradaException si no existe. */
     public Funcion buscarFuncion(String codigo) throws FuncionNoEncontradaException {
-        for (Funcion f : funciones) {
+        for (Funcion f : listCinemaFunciones) {
             if (f.getCodigo().equals(codigo)) return f;
         }
         throw new FuncionNoEncontradaException("No existe la función " + codigo);
@@ -153,7 +160,7 @@ public class CinemaUQ {
 
     /** Devuelve la tarifa del tipo de cliente indicado. Lanza IllegalStateException si no existe. */
     public Tarifa buscarTarifa(TipoCliente tipo) {
-        for (Tarifa t : tarifas) {
+        for (Tarifa t : listCinemaTarifas) {
             if (t.getTipoCliente() == tipo) return t;
         }
         throw new IllegalStateException("No hay tarifa para " + tipo);
@@ -183,50 +190,69 @@ public class CinemaUQ {
         this.nit = nit;
     }
 
-    public List<Pelicula> getPeliculas() {
-        return List.copyOf(peliculas);
+    public List<Funcion> getListCinemaFunciones() {
+        return List.copyOf(listCinemaFunciones);
     }
 
-    public void setPeliculas(List<Pelicula> peliculas) {
-        this.peliculas = new ArrayList<>(peliculas);
+    public void setListCinemaFunciones(List<Funcion> listCinemaFunciones) {
+        this.listCinemaFunciones = new ArrayList<>(listCinemaFunciones);
     }
 
-    public List<Sala> getSalas() {
-        return List.copyOf(salas);
+
+    public List<Usuario> getListCinemaUsuarios() {
+        return listCinemaUsuarios;
     }
 
-    public void setSalas(List<Sala> salas) {
-        this.salas = new ArrayList<>(salas);
+    public void setListCinemaUsuarios(List<Usuario> listCinemaUsuarios) {
+        this.listCinemaUsuarios = listCinemaUsuarios;
     }
 
-    public List<Funcion> getFunciones() {
-        return List.copyOf(funciones);
+    public List<Cliente> getListCinemaClientes() {
+        return listCinemaClientes;
     }
 
-    public void setFunciones(List<Funcion> funciones) {
-        this.funciones = new ArrayList<>(funciones);
+    public void setListCinemaClientes(List<Cliente> listCinemaClientes) {
+        this.listCinemaClientes = listCinemaClientes;
     }
 
-    public List<Venta> getVentas() {
-        return List.copyOf(ventas);
+    public List<Venta> getListCinemaVentas() {
+        return listCinemaVentas;
     }
 
-    public void setVentas(List<Venta> ventas) {
-        this.ventas = new ArrayList<>(ventas);
+    public void setListCinemaVentas(List<Venta> listCinemaVentas) {
+        this.listCinemaVentas = listCinemaVentas;
     }
 
-    public List<Tarifa> getTarifas() {
-        return List.copyOf(tarifas);
+    public List<Tarifa> getListCinemaTarifas() {
+        return listCinemaTarifas;
     }
 
-    public void setTarifas(List<Tarifa> tarifas) {
-        this.tarifas = new ArrayList<>(tarifas);
+    public void setListCinemaTarifas(List<Tarifa> listCinemaTarifas) {
+        this.listCinemaTarifas = listCinemaTarifas;
+    }
+
+    public List<Sala> getListCinemaSalas() {
+        return listCinemaSalas;
+    }
+
+    public void setListCinemaSalas(List<Sala> listCinemaSalas) {
+        this.listCinemaSalas = listCinemaSalas;
+    }
+
+    public List<Pelicula> getListCinemaPeliculas() {
+        return listCinemaPeliculas;
+    }
+
+    public void setListCinemaPeliculas(List<Pelicula> listCinemaPeliculas) {
+        this.listCinemaPeliculas = listCinemaPeliculas;
     }
 
     @Override
     public String toString() {
-        return "CinemaUQ{nombre='" + nombre + "', direccion='" + direccion + "', nit='" + nit
-                + "', peliculas=" + peliculas.size() + ", salas=" + salas.size()
-                + ", funciones=" + funciones.size() + ", ventas=" + ventas.size() + "}";
+        return "CinemaUQ{" +
+                "nombre='" + nombre + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", nit='" + nit + '\'' +
+                '}';
     }
 }
