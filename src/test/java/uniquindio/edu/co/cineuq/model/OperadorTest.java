@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 import uniquindio.edu.co.cineuq.exception.AsientoOcupadoException;
 import uniquindio.edu.co.cineuq.exception.SinAsientosDisponiblesException;
 import uniquindio.edu.co.cineuq.model.enumeraciones.*;
-
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -35,7 +33,7 @@ class OperadorTest {
 
     private Funcion funcion(TipoSala tipo, int capacidad) {
         Sala sala = new Sala("S1", "Sala 1", capacidad, tipo);
-        return new Funcion("F1", pelicula, sala, FECHA, LocalTime.of(14, 0), 10000);
+        return new Funcion("A1", pelicula, sala, FECHA, LocalTime.of(14, 0), 10000);
     }
 
     @Test
