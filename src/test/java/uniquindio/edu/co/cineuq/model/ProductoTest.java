@@ -1,6 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
 import org.junit.jupiter.api.Test;
+import uniquindio.edu.co.cineuq.model.enumeraciones.CategoriaProducto;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

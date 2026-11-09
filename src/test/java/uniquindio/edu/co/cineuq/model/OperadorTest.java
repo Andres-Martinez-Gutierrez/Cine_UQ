@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uniquindio.edu.co.cineuq.exception.AsientoOcupadoException;
 import uniquindio.edu.co.cineuq.exception.SinAsientosDisponiblesException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

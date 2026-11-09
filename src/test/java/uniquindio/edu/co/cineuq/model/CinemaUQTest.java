@@ -3,6 +3,7 @@ package uniquindio.edu.co.cineuq.model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uniquindio.edu.co.cineuq.exception.*;
+import uniquindio.edu.co.cineuq.model.enumeraciones.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

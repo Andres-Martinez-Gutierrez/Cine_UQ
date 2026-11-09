@@ -1,5 +1,8 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoSala;
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoSala;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,6 +1,9 @@
 package uniquindio.edu.co.cineuq.model;
 
 import org.junit.jupiter.api.Test;
+import uniquindio.edu.co.cineuq.model.enumeraciones.Clasificacion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoPelicula;
+import uniquindio.edu.co.cineuq.model.enumeraciones.Genero;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

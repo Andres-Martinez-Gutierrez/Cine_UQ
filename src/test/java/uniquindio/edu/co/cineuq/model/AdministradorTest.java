@@ -2,6 +2,10 @@ package uniquindio.edu.co.cineuq.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uniquindio.edu.co.cineuq.model.enumeraciones.Clasificacion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.Genero;
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoSala;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

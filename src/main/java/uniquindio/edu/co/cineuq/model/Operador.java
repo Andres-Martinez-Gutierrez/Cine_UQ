@@ -2,6 +2,7 @@ package uniquindio.edu.co.cineuq.model;
 
 import uniquindio.edu.co.cineuq.exception.CinemaUQException;
 import uniquindio.edu.co.cineuq.exception.SinAsientosDisponiblesException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoFuncion;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

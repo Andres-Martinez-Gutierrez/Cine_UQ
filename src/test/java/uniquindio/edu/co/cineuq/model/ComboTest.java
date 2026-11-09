@@ -2,6 +2,7 @@ package uniquindio.edu.co.cineuq.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import uniquindio.edu.co.cineuq.model.enumeraciones.CategoriaProducto;
 
 import java.util.List;
 

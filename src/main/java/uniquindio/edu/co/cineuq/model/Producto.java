@@ -1,5 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.CategoriaProducto;
+
 public class Producto {
     private String codigo;
     private String nombre;

@@ -1,6 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
 import uniquindio.edu.co.cineuq.exception.AsientoOcupadoException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoAsiento;
 
 public class AsientoFuncion {
 

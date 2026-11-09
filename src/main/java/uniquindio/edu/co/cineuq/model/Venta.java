@@ -1,5 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoVenta;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;

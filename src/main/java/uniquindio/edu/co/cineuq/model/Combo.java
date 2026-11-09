@@ -1,5 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.CategoriaProducto;
+
 import java.util.ArrayList;
 import java.util.List;
 

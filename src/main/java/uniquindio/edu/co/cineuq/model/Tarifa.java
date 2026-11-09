@@ -1,5 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
+
 public class Tarifa {
     private TipoCliente tipoCliente;
     private double valor;

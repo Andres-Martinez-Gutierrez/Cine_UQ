@@ -1,5 +1,9 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.Clasificacion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoPelicula;
+import uniquindio.edu.co.cineuq.model.enumeraciones.Genero;
+
 public class Pelicula {
     private String codigo;
     private String nombre;
