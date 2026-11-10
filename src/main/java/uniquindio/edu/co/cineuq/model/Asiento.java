@@ -8,7 +8,7 @@ public class Asiento {
     private String codigo;
     private char fila;
     private int numero;
-    private Boleta theAsientoBoleta;
+    private Boleta boleta;
 
     //Relaciones de la clase Asiento
     private List<Asiento> listAsientofunAsiento;
@@ -26,22 +26,22 @@ public class Asiento {
      * @param codigo código del asiento (fila y número, por ejemplo "A5")
      * @param fila letra de la fila del asiento
      * @param numero número del asiento dentro de su fila
-     * @param theAsientoBoleta comprobante de tu asiento
+     * @param boleta comprobante de tu asiento
      */
-    public Asiento(String codigo, char fila, int numero, Boleta theAsientoBoleta) {
+    public Asiento(String codigo, char fila, int numero, Boleta boleta) {
         this.codigo = codigo;
         this.fila = fila;
         this.numero = numero;
-        this.theAsientoBoleta = theAsientoBoleta;
+        this.boleta = boleta;
         this.listAsientofunAsiento = new ArrayList<>();
     }
 
-    public Boleta getTheAsientoBoleta() {
-        return theAsientoBoleta;
+    public Boleta getBoleta() {
+        return boleta;
     }
 
-    public void setTheAsientoBoleta(Boleta theAsientoBoleta) {
-        this.theAsientoBoleta = theAsientoBoleta;
+    public void setBoleta(Boleta boleta) {
+        this.boleta = boleta;
     }
 
     public String getCodigo() {
@@ -82,7 +82,7 @@ public class Asiento {
                 "codigo='" + codigo + '\'' +
                 ", fila=" + fila +
                 ", numero=" + numero +
-                ", theAsientoBoleta=" + theAsientoBoleta +
+                ", theAsientoBoleta=" + boleta +
                 ", listAsientofunAsiento=" + listAsientofunAsiento +
                 '}';
     }

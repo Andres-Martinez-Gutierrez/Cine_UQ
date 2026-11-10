@@ -30,11 +30,20 @@ public class Combo extends Producto {
      * @param descuento descuento como fracción (0.1 equivale al 10 %)
      * @param productos productos que componen el combo
      */
+    /**
+     * Constructor de la clase Combo. Su precio se calcula a partir de los productos que lo componen.
+     */
     public Combo(String codigo, String nombre, double descuento, List<Producto> productos) {
-        super(codigo, nombre, 0, CategoriaProducto.COMIDA);
+        // 1. Pasamos null en la posición del Combo para evitar la restricción de Java
+        super(codigo, nombre, 0.0, CategoriaProducto.COMIDA, null);
+
+        // 2. Ahora que super ya se ejecutó, nos asignamos a nosotros mismos
+        this.setCombo(this);
+
         this.descuento = descuento;
         this.productos = new ArrayList<>(productos);
     }
+
 
     /** Calcula el precio del combo: la suma de sus productos menos el descuento. */
     public double calcularPrecio() {

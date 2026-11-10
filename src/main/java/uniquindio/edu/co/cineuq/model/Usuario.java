@@ -1,6 +1,8 @@
 package uniquindio.edu.co.cineuq.model;
 
 public abstract class Usuario {
+
+    //Atributos de la clase Usuario
     private String usuario;
     private String contrasena;
     private String nombre;

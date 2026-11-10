@@ -3,6 +3,10 @@ package uniquindio.edu.co.cineuq.model;
 import uniquindio.edu.co.cineuq.exception.AsientoOcupadoException;
 import uniquindio.edu.co.cineuq.exception.CinemaUQException;
 import uniquindio.edu.co.cineuq.exception.SinAsientosDisponiblesException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoFuncion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoPelicula;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoSala;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoVenta;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -15,6 +19,9 @@ import java.util.UUID;
 
 public class Operador extends Usuario {
     private CinemaUQ cinema;
+
+    //Relaciones de la clase operador
+    private List<Venta> listOperadorVentas;
 
     /**
      * Constructor vacío de la clase Operador.
@@ -34,6 +41,7 @@ public class Operador extends Usuario {
     public Operador(String usuario, String contrasena, String nombre, CinemaUQ cinema) {
         super(usuario, contrasena, nombre);
         this.cinema = cinema;
+        this.listOperadorVentas = new ArrayList<>();
     }
 
     /**
@@ -47,8 +55,8 @@ public class Operador extends Usuario {
      * @throws IllegalArgumentException si algún dato de entrada no es válido
      * @throws IllegalStateException si la función no permite ventas
      */
-    public Venta vender(Funcion funcion, Cliente cliente, String codigoAsiento) throws CinemaUQException {
-        return vender(funcion, cliente, Collections.singletonList(codigoAsiento));
+    public Venta vender(CinemaUQ cinema, Funcion funcion, Cliente cliente, String codigoAsiento) throws CinemaUQException {
+        return vender(cinema,funcion, cliente, Collections.singletonList(codigoAsiento));
     }
 
     /**
@@ -63,23 +71,20 @@ public class Operador extends Usuario {
      * @throws IllegalArgumentException si los datos son inválidos o no pertenecen a este cine
      * @throws IllegalStateException si la función, la sala, la película o sus valores no permiten la venta
      */
-    public Venta vender(Funcion funcion, Cliente cliente, List<String> codigosAsientos) throws CinemaUQException {
-        if (cinema == null) {
-            throw new IllegalStateException("El operador no tiene un cine asignado");
-        }
+    public Venta vender(CinemaUQ cinema, Funcion funcion, Cliente cliente, List<String> codigosAsientos) throws CinemaUQException {
         if (funcion == null || cliente == null || codigosAsientos == null) {
             throw new IllegalArgumentException("La función, el cliente y la selección de asientos son obligatorios");
         }
         if (codigosAsientos.isEmpty()) {
             throw new IllegalArgumentException("Debe seleccionar al menos un asiento");
         }
-        if (!cinema.getFunciones().contains(funcion)) {
+        if (!cinema.getListCinemaFunciones().contains(funcion)) {
             throw new IllegalArgumentException("La función no está registrada en este cine");
         }
-        if (funcion.getSala() == null || !cinema.getSalas().contains(funcion.getSala())) {
+        if (funcion.getSala() == null || !cinema.getListCinemaSalas().contains(funcion.getSala())) {
             throw new IllegalArgumentException("La sala de la función no está registrada en este cine");
         }
-        if (funcion.getPelicula() == null || !cinema.getPeliculas().contains(funcion.getPelicula())) {
+        if (funcion.getPelicula() == null || !cinema.getListCinemaPeliculas().contains(funcion.getPelicula())) {
             throw new IllegalArgumentException("La película de la función no está registrada en este cine");
         }
         if (funcion.getEstado() != EstadoFuncion.PROGRAMADA) {
@@ -125,8 +130,16 @@ public class Operador extends Usuario {
         }
         int cantidadAsientos = asientosSeleccionados.size();
         Cobro cobro = new Cobro(valorEntrada * cantidadAsientos, recargoSala * cantidadAsientos, 0);
-        Venta venta = new Venta(generarCodigo(), LocalDateTime.now(), cliente, funcion, cobro);
-        venta.setAsientos(asientosSeleccionados);
+
+        // 1. Instanciamos la venta con el orden EXACTO que pide tu constructor, enviando null en Producto al final
+        Venta venta = new Venta(EstadoVenta.ACTIVA, funcion, cliente, LocalDateTime.now(), generarCodigo(), null);
+
+        // 2. Agregamos el cobro a la lista de cobros de la venta
+        venta.getListVentaCobros().add(cobro);
+
+        // 3. Asignamos los asientos seleccionados usando el método setter correcto de tu clase Venta
+        venta.setListVentaAsientofun(asientosSeleccionados);
+
 
         List<AsientoFuncion> asientosOcupados = new ArrayList<>();
         try {
@@ -175,6 +188,14 @@ public class Operador extends Usuario {
 
     public void setCinema(CinemaUQ cinema) {
         this.cinema = cinema;
+    }
+
+    public List<Venta> getListOperadorVentas() {
+        return listOperadorVentas;
+    }
+
+    public void setListOperadorVentas(List<Venta> listOperadorVentas) {
+        this.listOperadorVentas = listOperadorVentas;
     }
 
     @Override
