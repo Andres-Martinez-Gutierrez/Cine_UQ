@@ -7,16 +7,19 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane prefHeight="760.0" prefWidth="1180.0" styleClass="app-root"
+<BorderPane prefHeight="800.0" prefWidth="1280.0" styleClass="app-root"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="uniquindio.edu.co.cineuq.viewController.MainController">
     <left>
-        <VBox prefWidth="220.0" spacing="28.0" styleClass="sidebar">
+        <VBox prefWidth="200.0" minWidth="190.0" spacing="30.0" styleClass="sidebar">
             <padding>
                 <Insets bottom="24.0" left="18.0" right="18.0" top="28.0"/>
             </padding>
-            <Label text="CineUQ" styleClass="brand"/>
+            <VBox spacing="5.0">
+                <Label text="CineUQ" styleClass="brand"/>
+                <Label text="EXPERIENCIA DE CINE" styleClass="brand-caption"/>
+            </VBox>
             <VBox spacing="8.0">
                 <Button fx:id="carteleraButton" maxWidth="Infinity" onAction="#showCartelera"
                         styleClass="nav-button" text="Cartelera"/>
@@ -28,16 +31,17 @@
                         styleClass="nav-button" text="Administración"/>
             </VBox>
             <VBox VBox.vgrow="ALWAYS"/>
-            <Label text="Sistema de gestión de cine" styleClass="sidebar-footer" wrapText="true"/>
+            <Label text="Modo demostración · datos en memoria" styleClass="sidebar-footer" wrapText="true"/>
         </VBox>
     </left>
     <center>
         <VBox spacing="24.0" styleClass="workspace">
             <padding>
-                <Insets bottom="36.0" left="42.0" right="42.0" top="36.0"/>
+                <Insets bottom="32.0" left="36.0" right="36.0" top="32.0"/>
             </padding>
             <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
                 <VBox spacing="6.0">
+                    <Label text="PLATAFORMA DE GESTIÓN" styleClass="page-eyebrow"/>
                     <Label fx:id="pageTitle" text="Cartelera" styleClass="page-title"/>
                     <Label fx:id="pageDescription" styleClass="page-description"
                            wrapText="true"/>

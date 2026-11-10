@@ -8,7 +8,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 
-/** Punto de entrada y configuración inicial de la aplicación CineUQ. */
+/**
+ * Punto de entrada y configuración inicial de la aplicación CineUQ.
+ */
 public class HelloApplication extends Application {
     /**
      * Carga la vista principal y aplica sus estilos antes de mostrar la ventana.
@@ -19,13 +21,15 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 1180, 760);
+        Scene scene = new Scene(fxmlLoader.load(), 1280, 800);
         URL stylesheet = HelloApplication.class.getResource("styles.css");
         if (stylesheet == null) {
             throw new IOException("No se encontró la hoja de estilos de CineUQ");
         }
         scene.getStylesheets().add(stylesheet.toExternalForm());
         stage.setTitle("CineUQ");
+        stage.setMinWidth(1024);
+        stage.setMinHeight(680);
         stage.setScene(scene);
         stage.show();
     }
