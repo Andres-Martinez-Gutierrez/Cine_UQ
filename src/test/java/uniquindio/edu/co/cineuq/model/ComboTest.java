@@ -16,8 +16,8 @@ class ComboTest {
 
     @BeforeEach
     void setUp() {
-        cafe = new Producto("B1", "Café", 3000, CategoriaProducto.BEBIDA);
-        torta = new Producto("P1", "Torta", 7000, CategoriaProducto.POSTRE);
+        cafe = new Producto("B1", "Café", 3000, CategoriaProducto.BEBIDA, null);
+        torta = new Producto("P1", "Torta", 7000, CategoriaProducto.POSTRE, null);
     }
 
     @Test

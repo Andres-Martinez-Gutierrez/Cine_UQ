@@ -20,7 +20,6 @@ public class Administrador extends Usuario {
      * @param usuario    nombre de usuario con el que inicia sesión
      * @param contrasena contraseña del administrador
      * @param nombre     nombre completo del administrador
-     * @param cinema     cine que el administrador gestiona
      */
     public Administrador(String usuario, String contrasena, String nombre) {
         super(usuario, contrasena, nombre);
@@ -29,34 +28,37 @@ public class Administrador extends Usuario {
     /**
      * Registra una película en el cine administrado.
      */
-    public void gestionarPeliculas(Pelicula pelicula) throws PeliculaDuplicadaException {
+    public void gestionarPeliculas(CinemaUQ cinema, Pelicula pelicula) throws PeliculaDuplicadaException {
         cinema.registrarPelicula(pelicula);
     }
 
     /**
      * Registra una sala en el cine administrado.
      */
-    public void gestionarSalas(Sala sala) throws SalaDuplicadaException {
+    public void gestionarSalas(CinemaUQ cinema, Sala sala) throws SalaDuplicadaException {
         cinema.registrarSala(sala);
     }
 
     /**
      * Programa una función en el cine, validando que no se traslape con otra de la misma sala.
      */
-    public void programarFuncion(Funcion funcion) throws CinemaUQException {
+    public void programarFuncion(CinemaUQ cinema, Funcion funcion) throws CinemaUQException {
         cinema.programarFuncion(funcion);
     }
 
     /**
      * Actualiza el valor de la tarifa del tipo de cliente indicado.
      */
-    public void cambiarTarifa(TipoCliente tipo, double valor) {
+    public void cambiarTarifa(CinemaUQ cinema, TipoCliente tipo, double valor) {
         cinema.buscarTarifa(tipo).actualizarValor(valor);
     }
 
-
     @Override
     public String toString() {
-        return "Administrador{usuario='" + getUsuario() + "', nombre='" + getNombre() + "'}";
+        return "Administrador{" +
+                "='" + getUsuario() +
+                "', " +
+                "nombre='" + getNombre()
+                + "'}";
     }
 }

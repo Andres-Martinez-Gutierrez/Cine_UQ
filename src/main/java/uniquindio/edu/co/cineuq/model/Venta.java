@@ -59,7 +59,8 @@ public class Venta {
         this.producto = producto; // Asigna el producto en singular
 
         // Creamos un cobro por el valor del producto y lo agregamos a la lista
-        Cobro cobroProducto = new Cobro(0, 0, producto.getPrecio());
+        Cobro cobroProducto = new Cobro(0, 0, 0);
+        cobroProducto.agregarValorProductos(producto.getPrecio());
         this.listVentaCobros.add(cobroProducto);
     }
 

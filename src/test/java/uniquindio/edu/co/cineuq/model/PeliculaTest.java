@@ -16,7 +16,7 @@ class PeliculaTest {
 
     @Test
     void deshabilitarCambiaElEstadoANoDisponible() {
-        Pelicula pelicula = new Pelicula("P1", "Pelicula", Genero.TERROR, 100, Clasificacion.TODOS);
+        Pelicula pelicula = new Pelicula("P1", "Pelicula", Genero.TERROR, Clasificacion.TODOS, 100);
 
         pelicula.deshabilitar();
 

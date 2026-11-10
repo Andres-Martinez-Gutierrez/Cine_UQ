@@ -8,6 +8,7 @@ import uniquindio.edu.co.cineuq.model.enumeraciones.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,7 +28,7 @@ class CinemaUQTest {
     @BeforeEach
     void setUp() {
         cinema = new CinemaUQ("CineUQ", "Armenia", "900123456");
-        pelicula = new Pelicula("P1", "Interestelar", Genero.DRAMA, 120, Clasificacion.TODOS);
+        pelicula = new Pelicula("P1", "Interestelar", Genero.DRAMA, Clasificacion.TODOS, 120);
         sala = new Sala("S1", "Sala 1", 20, TipoSala.TRADICIONAL);
     }
 
@@ -36,7 +37,9 @@ class CinemaUQTest {
     }
 
     private Venta venta(String codigo, Funcion funcion, Cobro cobro) {
-        return new Venta(EstadoVenta.ACTIVA, cobro, funcion, new Cliente("1", "Ana", TipoCliente.GENERAL), LocalDateTime.now(), codigo);
+        Venta venta = new Venta(EstadoVenta.ACTIVA, funcion, new Cliente("1", "Ana", TipoCliente.GENERAL), LocalDateTime.now(), codigo, null);
+        venta.setListVentaCobros(new ArrayList<>(List.of(cobro)));
+        return venta;
     }
 
     @Test
@@ -51,7 +54,7 @@ class CinemaUQTest {
         cinema.registrarPelicula(pelicula);
 
         assertThrows(PeliculaDuplicadaException.class,
-                () -> cinema.registrarPelicula(new Pelicula("P1", "Otra", Genero.COMEDIA, 90, Clasificacion.TODOS)));
+                () -> cinema.registrarPelicula(new Pelicula("P1", "Otra", Genero.COMEDIA, Clasificacion.TODOS, 90)));
     }
 
     @Test
@@ -173,7 +176,7 @@ class CinemaUQTest {
 
     @Test
     void peliculaMasVendidaDevuelveLaPeliculaConMasEntradas() {
-        Pelicula otra = new Pelicula("P2", "Otra", Genero.COMEDIA, 90, Clasificacion.TODOS);
+        Pelicula otra = new Pelicula("P2", "Otra", Genero.COMEDIA, Clasificacion.TODOS, 90);
         Funcion funcionPrincipal = funcion("F1", sala, FECHA, LocalTime.of(14, 0));
         Funcion funcionOtra = new Funcion("F2", otra, sala, FECHA, LocalTime.of(18, 0), 10000);
         Venta v1 = venta("V1", funcionPrincipal, new Cobro(10000, 0, 0));

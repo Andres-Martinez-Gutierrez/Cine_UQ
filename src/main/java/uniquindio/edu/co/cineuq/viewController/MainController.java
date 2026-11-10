@@ -2,40 +2,22 @@ package uniquindio.edu.co.cineuq.viewController;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.util.StringConverter;
+import uniquindio.edu.co.cineuq.exception.CinemaUQException;
 import uniquindio.edu.co.cineuq.exception.PeliculaDuplicadaException;
 import uniquindio.edu.co.cineuq.exception.SalaDuplicadaException;
 import uniquindio.edu.co.cineuq.exception.SalaNoDisponibleException;
-import uniquindio.edu.co.cineuq.exception.CinemaUQException;
 import uniquindio.edu.co.cineuq.model.*;
+import uniquindio.edu.co.cineuq.model.enumeraciones.*;
 
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Pantallas principales de cartelera, selección de asientos y venta de CineUQ.
@@ -83,7 +65,7 @@ public class MainController {
     private void initialize() {
         cinema = createSampleCinema();
         operador = new Operador("operador", "", "Operador CineUQ", cinema);
-        administrador = new Administrador("admin", "", "Administrador CineUQ", cinema);
+        administrador = new Administrador("admin", "", "Administrador CineUQ");
         products = sampleProducts();
         showCartelera();
     }
@@ -125,7 +107,7 @@ public class MainController {
 
     private Node createMovieCatalog() {
         VBox content = new VBox(16);
-        long availableMovies = cinema.getPeliculas().stream()
+        long availableMovies = cinema.getListCinemaPeliculas().stream()
                 .filter(movie -> movie.getEstado() == EstadoPelicula.DISPONIBLE).count();
         Label count = label(availableMovies + " películas en exhibición", "muted-text");
         HBox filters = new HBox(7);
@@ -154,7 +136,7 @@ public class MainController {
     private void refreshMovieGrid(VBox content, String category) {
         GridPane grid = (GridPane) content.getChildren().get(2);
         grid.getChildren().clear();
-        List<Pelicula> movies = cinema.getPeliculas().stream()
+        List<Pelicula> movies = cinema.getListCinemaPeliculas().stream()
                 .filter(movie -> movie.getEstado() == EstadoPelicula.DISPONIBLE)
                 .filter(movie -> category.equals("Todas") || genreLabel(movie.getGenero()).equalsIgnoreCase(category))
                 .toList();
@@ -261,7 +243,7 @@ public class MainController {
     }
 
     private void showFunctionsFor(Pelicula movie) {
-        List<Funcion> functions = cinema.getFunciones().stream()
+        List<Funcion> functions = cinema.getListCinemaFunciones().stream()
                 .filter(function -> function.getPelicula().equals(movie) && isFunctionBookable(function))
                 .sorted((first, second) -> {
                     int dateComparison = first.getFecha().compareTo(second.getFecha());
@@ -314,7 +296,7 @@ public class MainController {
         int capacity = function.getSala().getCapacidad();
         int columns = 10;
         for (int i = 0; i < capacity; i++) {
-            AsientoFuncion seat = function.getAsientos().get(i);
+            AsientoFuncion seat = function.getListFuncionAsientofun().get(i);
             int row = i / columns;
             int column = i % columns;
             Button button = new Button(seat.getAsiento().getCodigo());
@@ -458,7 +440,7 @@ public class MainController {
         }
         try {
             Cliente customer = new Cliente(customerId.getText().isBlank() ? "SIN-ID" : customerId.getText().trim(), customerName.getText().trim(), customerType);
-            lastSale = operador.vender(selectedFunction, customer, selectedSeatCodesList());
+            lastSale = operador.vender(cinema, selectedFunction, customer, selectedSeatCodesList());
             for (Map.Entry<Producto, Integer> entry : selectedProducts.entrySet()) {
                 for (int i = 0; i < entry.getValue(); i++) lastSale.agregarProducto(entry.getKey());
             }
@@ -476,13 +458,15 @@ public class MainController {
                 receiptLine("Boleta", lastSale.getCodigo()), receiptLine("Fecha", lastSale.getFechaHora().format(DateTimeFormatter.ofPattern("d MMM yyyy · HH:mm", Locale.forLanguageTag("es-CO")))),
                 receiptLine("Cliente", lastSale.getCliente().getNombre()), receiptLine("Función", lastSale.getFuncion().getPelicula().getNombre()),
                 receiptLine("Sala / hora", lastSale.getFuncion().getSala().getNombre() + " · " + lastSale.getFuncion().getHoraInicio().format(HOUR)),
-                receiptLine("Asientos", lastSale.getAsientos().stream().map(seat -> seat.getAsiento().getCodigo()).reduce((a, b) -> a + ", " + b).orElse("")),
-                receiptLine("Entradas", money(lastSale.getCobro().getValorEntrada())),
-                receiptLine("Recargo de sala", money(lastSale.getCobro().getRecargoSala())));
-        for (Producto product : lastSale.getProductos())
-            receipt.getChildren().add(receiptLine("Producto", product.getNombre() + " · " + money(product.getPrecio())));
-        if (lastSale.getCobro().getDescuentoCliente() > 0) {
-            receipt.getChildren().add(receiptLine("Descuento", "− " + money(lastSale.getCobro().getDescuentoCliente())));
+                receiptLine("Asientos", lastSale.getListVentaAsientofun().stream().map(seat -> seat.getAsiento().getCodigo()).reduce((a, b) -> a + ", " + b).orElse("")),
+                receiptLine("Entradas", money(lastSale.getListVentaCobros().getFirst().getValorEntrada())),
+                receiptLine("Recargo de sala", money(lastSale.getListVentaCobros().getFirst().getRecargoSala())));
+        for (Map.Entry<Producto, Integer> entry : selectedProducts.entrySet())
+            receipt.getChildren().add(receiptLine("Producto", entry.getValue() + " × " + entry.getKey().getNombre()
+                    + " · " + money(entry.getKey().getPrecio() * entry.getValue())));
+        double customerDiscount = lastSale.getListVentaCobros().getFirst().getDescuentoCliente();
+        if (customerDiscount > 0) {
+            receipt.getChildren().add(receiptLine("Descuento", "− " + money(customerDiscount)));
         }
         receipt.getChildren().addAll(receiptLine("Total pagado", money(lastSale.getTotal())), backButton("Volver a cartelera", this::showCartelera));
         pageContent.getChildren().setAll(scroll(receipt));
@@ -508,7 +492,7 @@ public class MainController {
     }
 
     private Node createAdminSummary() {
-        List<Venta> sales = cinema.getVentas().stream().filter(v -> v.getEstado() == EstadoVenta.ACTIVA).toList();
+        List<Venta> sales = cinema.getListCinemaVentas().stream().filter(v -> v.getEstado() == EstadoVenta.ACTIVA).toList();
         double income = sales.stream().mapToDouble(Venta::getTotal).sum();
         List<Funcion> functionsToday = cinema.funcionesDia(LocalDate.now());
         double averageOccupancy = functionsToday.stream().mapToDouble(Funcion::porcentajeOcupacion).average().orElse(0);
@@ -528,7 +512,7 @@ public class MainController {
     private Node createMovieManagement() {
         VBox content = new VBox(14);
         ListView<Pelicula> movieList = new ListView<>();
-        movieList.getItems().setAll(cinema.getPeliculas());
+        movieList.getItems().setAll(cinema.getListCinemaPeliculas());
         movieList.setCellFactory(view -> new ListCell<>() {
             @Override
             protected void updateItem(Pelicula movie, boolean empty) {
@@ -580,14 +564,14 @@ public class MainController {
                 if (selected == null) {
                     selected = new Pelicula(code.getText().trim(), name.getText().trim(), genre.getValue(),
                             classification.getValue(), minutes);
-                    administrador.gestionarPeliculas(selected);
+                    administrador.gestionarPeliculas(cinema, selected);
                 } else {
                     selected.setNombre(name.getText().trim());
                     selected.setGenero(genre.getValue());
                     selected.setClasificacion(classification.getValue());
                     selected.setDuracionMinutos(minutes);
                 }
-                movieList.getItems().setAll(cinema.getPeliculas());
+                movieList.getItems().setAll(cinema.getListCinemaPeliculas());
                 movieList.getSelectionModel().select(selected);
                 refreshFunctionOptions();
                 code.setText(selected.getCodigo());
@@ -638,7 +622,7 @@ public class MainController {
     private Node createRoomManagement() {
         VBox content = new VBox(14);
         ListView<Sala> roomList = new ListView<>();
-        roomList.getItems().setAll(cinema.getSalas());
+        roomList.getItems().setAll(cinema.getListCinemaSalas());
         roomList.setCellFactory(view -> new ListCell<>() {
             @Override
             protected void updateItem(Sala room, boolean empty) {
@@ -686,10 +670,10 @@ public class MainController {
                 Sala selected = roomList.getSelectionModel().getSelectedItem();
                 if (selected == null) {
                     selected = new Sala(code.getText().trim(), name.getText().trim(), seats, type.getValue());
-                    administrador.gestionarSalas(selected);
+                    administrador.gestionarSalas(cinema, selected);
                 } else {
                     Sala selectedRoom = selected;
-                    if (seats != selected.getCapacidad() && cinema.getFunciones().stream()
+                    if (seats != selected.getCapacidad() && cinema.getListCinemaFunciones().stream()
                             .anyMatch(function -> function.getSala() == selectedRoom)) {
                         throw new IllegalArgumentException("No se puede cambiar la capacidad de una sala que ya tiene funciones programadas.");
                     }
@@ -697,7 +681,7 @@ public class MainController {
                     selected.setCapacidad(seats);
                     selected.setTipo(type.getValue());
                 }
-                roomList.getItems().setAll(cinema.getSalas());
+                roomList.getItems().setAll(cinema.getListCinemaSalas());
                 roomList.getSelectionModel().select(selected);
                 refreshFunctionOptions();
                 code.setText(selected.getCodigo());
@@ -779,7 +763,7 @@ public class MainController {
                 }
                 Funcion function = new Funcion("F" + java.util.UUID.randomUUID().toString().substring(0, 8).toUpperCase(Locale.ROOT),
                         functionMovieSelector.getValue(), functionRoomSelector.getValue(), date.getValue(), start, 15000);
-                administrador.programarFuncion(function);
+                administrador.programarFuncion(cinema, function);
                 refreshFunctionList(functionList);
                 feedback.setText("Función programada correctamente.");
             } catch (java.time.format.DateTimeParseException exception) {
@@ -845,7 +829,7 @@ public class MainController {
                 if (!Double.isFinite(value) || value < 0) {
                     throw new IllegalArgumentException("La tarifa debe ser un valor válido mayor o igual que cero.");
                 }
-                administrador.cambiarTarifa(type.getValue(), value);
+                administrador.cambiarTarifa(cinema, type.getValue(), value);
                 refresh.run();
                 feedback.setText("Tarifa actualizada correctamente.");
             } catch (NumberFormatException exception) {
@@ -862,7 +846,7 @@ public class MainController {
     }
 
     private void refreshFunctionList(ListView<Funcion> functionList) {
-        functionList.getItems().setAll(cinema.getFunciones().stream()
+        functionList.getItems().setAll(cinema.getListCinemaFunciones().stream()
                 .sorted((first, second) -> {
                     int dateComparison = first.getFecha().compareTo(second.getFecha());
                     return dateComparison != 0 ? dateComparison : first.getHoraInicio().compareTo(second.getHoraInicio());
@@ -872,7 +856,7 @@ public class MainController {
     private void refreshFunctionOptions() {
         if (functionMovieSelector != null) {
             Pelicula selectedMovie = functionMovieSelector.getValue();
-            functionMovieSelector.getItems().setAll(cinema.getPeliculas().stream()
+            functionMovieSelector.getItems().setAll(cinema.getListCinemaPeliculas().stream()
                     .filter(item -> item.getEstado() == EstadoPelicula.DISPONIBLE).toList());
             if (selectedMovie != null && functionMovieSelector.getItems().contains(selectedMovie)) {
                 functionMovieSelector.setValue(selectedMovie);
@@ -882,7 +866,7 @@ public class MainController {
         }
         if (functionRoomSelector != null) {
             Sala selectedRoom = functionRoomSelector.getValue();
-            functionRoomSelector.getItems().setAll(cinema.getSalas().stream()
+            functionRoomSelector.getItems().setAll(cinema.getListCinemaSalas().stream()
                     .filter(item -> item.getEstado() == EstadoSala.DISPONIBLE).toList());
             if (selectedRoom != null && functionRoomSelector.getItems().contains(selectedRoom)) {
                 functionRoomSelector.setValue(selectedRoom);
@@ -1018,7 +1002,7 @@ public class MainController {
 
     private CinemaUQ createSampleCinema() {
         CinemaUQ sample = new CinemaUQ("CineUQ", "Armenia", "900000000");
-        sample.getTarifas().forEach(tariff -> tariff.actualizarValor(switch (tariff.getTipoCliente()) {
+        sample.getListCinemaTarifas().forEach(tariff -> tariff.actualizarValor(switch (tariff.getTipoCliente()) {
             case GENERAL -> 15000;
             case ESTUDIANTE -> 12000;
             case NIÑO, ADULTO_MAYOR -> 10000;
@@ -1065,12 +1049,12 @@ public class MainController {
     }
 
     private List<Producto> sampleProducts() {
-        Producto popcorn = new Producto("PR1", "Crispetas grandes", 8000, CategoriaProducto.COMIDA);
-        Producto soda = new Producto("PR2", "Gaseosa mediana", 5000, CategoriaProducto.BEBIDA);
+        Producto popcorn = new Producto("PR1", "Crispetas grandes", 8000, CategoriaProducto.COMIDA, null);
+        Producto soda = new Producto("PR2", "Gaseosa mediana", 5000, CategoriaProducto.BEBIDA, null);
         return List.of(
                 popcorn,
                 soda,
                 new Combo("CB1", "Combo pareja", 0.1, List.of(popcorn, soda)),
-                new Producto("PR3", "Brownie", 6000, CategoriaProducto.POSTRE));
+                new Producto("PR3", "Brownie", 6000, CategoriaProducto.POSTRE, null));
     }
 }
