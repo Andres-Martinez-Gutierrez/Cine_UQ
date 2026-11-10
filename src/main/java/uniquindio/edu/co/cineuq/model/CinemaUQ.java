@@ -131,11 +131,11 @@ public class CinemaUQ {
                 .sum();
     }
 
-    /** Película con más entradas vendidas en ventas activas; null si no hay ventas. */
+    /** Película con más entradas vendidas en ventas activas; null si no hay ventas de entradas. */
     public Pelicula peliculaMasVendida() {
         Map<Pelicula, Integer> entradas = new HashMap<>();
         for (Venta v : listCinemaVentas) {
-            if (v.getEstado() != EstadoVenta.ACTIVA) continue;
+            if (v.getEstado() != EstadoVenta.ACTIVA || v.getFuncion() == null) continue;
             entradas.merge(v.getFuncion().getPelicula(), v.getListVentaAsientofun().size(), Integer::sum);
         }
         return entradas.entrySet().stream()

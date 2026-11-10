@@ -1,6 +1,8 @@
 package uniquindio.edu.co.cineuq.viewController.componentes;
 
 import javafx.util.StringConverter;
+import uniquindio.edu.co.cineuq.model.Combo;
+import uniquindio.edu.co.cineuq.model.Producto;
 import uniquindio.edu.co.cineuq.model.enumeraciones.*;
 
 import java.text.NumberFormat;
@@ -69,6 +71,15 @@ public final class Formatos {
             case VIP -> "VIP";
             case SALA_3D -> "3D";
             case IMAX -> "IMAX";
+        };
+    }
+
+    public static String categoria(Producto producto) {
+        if (producto instanceof Combo) return "Combo";
+        return switch (producto.getCategoria()) {
+            case COMIDA -> "Comida";
+            case BEBIDA -> "Bebida";
+            case POSTRE -> "Postre";
         };
     }
 

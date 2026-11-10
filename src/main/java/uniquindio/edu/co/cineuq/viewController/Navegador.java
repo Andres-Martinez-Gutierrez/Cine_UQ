@@ -11,6 +11,12 @@ import uniquindio.edu.co.cineuq.model.Venta;
 public interface Navegador {
     void mostrarCartelera();
 
+    /** Venta y cobro de confitería, sin entradas. */
+    void mostrarVentas();
+
+    /** Agenda de funciones para elegir a cuál se le venden entradas. */
+    void mostrarAgendaVentas();
+
     void mostrarFuncionesDe(Pelicula pelicula);
 
     void mostrarMapaAsientos(Funcion funcion);

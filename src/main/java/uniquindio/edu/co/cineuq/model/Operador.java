@@ -156,6 +156,28 @@ public class Operador extends Usuario {
     }
 
     /**
+     * Vende productos de confitería sin entradas a ninguna función.
+     *
+     * @param cinema    cine en el que se registra la venta
+     * @param cliente   cliente que realiza la compra
+     * @param productos productos vendidos; un producto repetido cuenta una vez por unidad
+     * @return venta registrada, sin función ni asientos
+     * @throws IllegalArgumentException si falta el cine, el cliente o no hay productos
+     */
+    public Venta venderProductos(CinemaUQ cinema, Cliente cliente, List<Producto> productos) {
+        if (cinema == null || cliente == null) {
+            throw new IllegalArgumentException("El cine y el cliente son obligatorios");
+        }
+        if (productos == null || productos.isEmpty() || productos.stream().anyMatch(producto -> producto == null)) {
+            throw new IllegalArgumentException("Debe seleccionar al menos un producto");
+        }
+        Venta venta = new Venta(EstadoVenta.ACTIVA, null, cliente, LocalDateTime.now(), generarCodigo(), null);
+        productos.forEach(venta::agregarProducto);
+        cinema.registrarVenta(venta);
+        return venta;
+    }
+
+    /**
      * Cancela la venta indicada y libera sus asientos.
      *
      * @param venta venta que se va a cancelar

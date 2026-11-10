@@ -33,7 +33,7 @@ public class FuncionesViewController {
     }
 
     public Pagina crearPaginaVentas() {
-        return new Pagina("Venta y cobro", "Selecciona una función para iniciar una compra", Seccion.VENTAS, crearAgenda());
+        return new Pagina("Vender entradas", "Selecciona la función y luego los asientos", Seccion.VENTAS, crearAgenda());
     }
 
     public Pagina crearPaginaPelicula(Pelicula pelicula) {

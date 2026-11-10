@@ -1,10 +1,14 @@
 package uniquindio.edu.co.cineuq.viewController;
 
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -18,16 +22,13 @@ import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
 import uniquindio.edu.co.cineuq.viewController.componentes.Formatos;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static uniquindio.edu.co.cineuq.viewController.componentes.Componentes.*;
 
 /**
- * Pantalla de cobro: datos del cliente, productos y confirmación de la venta.
+ * Pantalla de venta y cobro. Sirve para vender confitería sola o entradas de una función con sus productos.
  */
 public class CobroViewController {
-    private static final String SIN_PRODUCTOS = "Sin productos";
-
     private final VentaController ventas;
     private final Navegador navegador;
 
@@ -36,63 +37,125 @@ public class CobroViewController {
         this.navegador = Objects.requireNonNull(navegador);
     }
 
+    /** Venta de mostrador: productos de confitería, con opción de pasar a vender entradas. */
+    public Pagina crearPaginaConfiteria() {
+        return crearPagina(ventas.iniciarCompraConfiteria());
+    }
+
     public Pagina crearPagina(CompraEnCurso compra) {
         Funcion funcion = compra.getFuncion();
+
+        Label conceptoEntradas = etiqueta("", "summary-label");
+        Label valorEntradas = etiqueta("", "summary-value");
+        Label valorRecargo = etiqueta("", "summary-value");
+        Label valorProductos = etiqueta("", "summary-value");
         Label total = etiqueta("", "total-value");
-        Label resumenProductos = etiqueta(SIN_PRODUCTOS, "muted-text");
-        Label listaProductos = etiqueta(SIN_PRODUCTOS, "muted-text");
-        Runnable actualizarTotales = () -> {
+        Runnable actualizarCobro = () -> {
+            conceptoEntradas.setText("Entradas (" + compra.getAsientos().size() + " × "
+                    + Formatos.dinero(ventas.tarifa(compra)) + ")");
+            valorEntradas.setText(Formatos.dinero(ventas.totalTarifas(compra)));
+            valorRecargo.setText(Formatos.dinero(ventas.totalRecargo(compra)));
+            valorProductos.setText(Formatos.dinero(ventas.totalProductos(compra)));
             total.setText(Formatos.dinero(ventas.total(compra)));
-            String productos = describirProductos(compra);
-            resumenProductos.setText(productos);
-            listaProductos.setText(productos);
         };
 
-        ComboBox<TipoCliente> tipo = new ComboBox<>();
-        tipo.getItems().setAll(TipoCliente.values());
-        tipo.setValue(compra.getTipoCliente());
-        tipo.setConverter(Formatos.convertidor(Formatos::tipoCliente));
-        tipo.getStyleClass().add("customer-type-select");
-        tipo.setOnAction(event -> {
-            compra.setTipoCliente(tipo.getValue());
-            actualizarTotales.run();
-        });
         TextField nombre = new TextField();
         nombre.setPromptText("Nombre del cliente");
         TextField identificacion = new TextField();
         identificacion.setPromptText("Identificación (opcional)");
-        VBox cliente = panel();
-        cliente.getChildren().addAll(etiqueta("Tipo de cliente", "section-title"), tipo, nombre, identificacion);
 
-        VBox productos = panel();
-        productos.getChildren().add(etiqueta("Productos", "section-title"));
-        for (Producto producto : ventas.productos()) {
-            productos.getChildren().add(crearFilaProducto(producto, compra, actualizarTotales));
+        VBox formulario = new VBox(16);
+        if (!compra.incluyeEntradas()) {
+            formulario.getChildren().add(crearPanelSinEntradas());
         }
-        productos.getChildren().add(listaProductos);
+        formulario.getChildren().addAll(crearPanelCliente(compra, actualizarCobro, nombre, identificacion),
+                crearPanelProductos(compra, actualizarCobro));
 
         Button confirmar = boton("Confirmar venta", "primary-button",
                 () -> confirmar(compra, nombre.getText(), identificacion.getText()));
         confirmar.setMaxWidth(Double.MAX_VALUE);
 
-        VBox resumen = panel();
-        resumen.getStyleClass().add("purchase-summary");
-        resumen.setPrefWidth(270);
-        resumen.getChildren().addAll(etiqueta("Cobro", "section-title"),
-                etiqueta(compra.getAsientos().size() + " entrada(s) · " + compra.descripcionAsientos(), "table-cell"),
-                etiqueta("Sala " + Formatos.tipoSala(funcion.getSala().getTipo()), "muted-text"),
-                etiqueta("Productos", "muted-text"), resumenProductos,
-                etiqueta("Total", "section-title"), total, confirmar,
-                botonVolver("Cambiar asientos", () -> navegador.mostrarMapaAsientos(funcion)));
+        HBox lineaTotal = linea(etiqueta("Total", "section-title"), total);
+        lineaTotal.getStyleClass().add("summary-total");
 
-        VBox formulario = new VBox(16, cliente, productos);
-        HBox layout = new HBox(18, formulario, resumen);
+        VBox cobro = panel();
+        cobro.getStyleClass().add("checkout-summary");
+        cobro.setPrefWidth(360);
+        cobro.getChildren().add(etiqueta("Cobro", "section-title"));
+        if (compra.incluyeEntradas()) {
+            cobro.getChildren().addAll(linea(conceptoEntradas, valorEntradas),
+                    linea(etiqueta("Recargo sala " + Formatos.tipoSala(funcion.getSala().getTipo()), "summary-label"),
+                            valorRecargo));
+        }
+        cobro.getChildren().addAll(linea(etiqueta("Productos", "summary-label"), valorProductos), lineaTotal, confirmar);
+        if (compra.incluyeEntradas()) {
+            cobro.getChildren().add(botonVolver("Cambiar asientos", () -> navegador.mostrarMapaAsientos(funcion)));
+        }
+
+        HBox layout = new HBox(24, formulario, cobro);
+        layout.setFillHeight(false);
+        layout.setAlignment(Pos.TOP_LEFT);
         HBox.setHgrow(formulario, Priority.ALWAYS);
-        actualizarTotales.run();
+        actualizarCobro.run();
 
-        String descripcion = funcion.getPelicula().getNombre() + " · " + funcion.getSala().getNombre()
-                + " · " + compra.descripcionAsientos();
+        String descripcion = compra.incluyeEntradas()
+                ? funcion.getPelicula().getNombre() + " · " + funcion.getSala().getNombre()
+                  + " · Asientos " + compra.descripcionAsientos()
+                : "Confitería · agrega productos o vende entradas para una función";
         return new Pagina("Venta y cobro", descripcion, Seccion.VENTAS, desplazable(layout));
+    }
+
+    private Node crearPanelSinEntradas() {
+        VBox panel = panel();
+        Button elegirFuncion = boton("Elegir función y asientos", "secondary-button", navegador::mostrarAgendaVentas);
+        HBox fila = new HBox(12, new VBox(4, etiqueta("Entradas", "section-title"),
+                etiqueta("Esta venta no incluye entradas.", "muted-text")), espaciador(), elegirFuncion);
+        fila.setAlignment(Pos.CENTER_LEFT);
+        panel.getChildren().add(fila);
+        return panel;
+    }
+
+    private Node crearPanelCliente(CompraEnCurso compra, Runnable alCambiar, TextField nombre, TextField identificacion) {
+        VBox panel = panel();
+        if (compra.incluyeEntradas()) {
+            panel.getChildren().addAll(etiqueta("Tipo de cliente", "section-title"), crearSelectorTipoCliente(compra, alCambiar));
+        } else {
+            panel.getChildren().add(etiqueta("Cliente", "section-title"));
+        }
+        panel.getChildren().addAll(nombre, identificacion);
+        return panel;
+    }
+
+    private Node crearPanelProductos(CompraEnCurso compra, Runnable alCambiar) {
+        VBox panel = panel();
+        panel.getChildren().add(etiqueta("Productos", "section-title"));
+        for (Producto producto : ventas.productos()) {
+            panel.getChildren().add(crearFilaProducto(producto, compra, alCambiar));
+        }
+        return panel;
+    }
+
+    /** Opciones tipo píldora; siempre queda exactamente una seleccionada. */
+    private Node crearSelectorTipoCliente(CompraEnCurso compra, Runnable alCambiar) {
+        ToggleGroup grupo = new ToggleGroup();
+        FlowPane opciones = new FlowPane(8, 8);
+        for (TipoCliente tipo : TipoCliente.values()) {
+            ToggleButton opcion = new ToggleButton(Formatos.tipoCliente(tipo));
+            opcion.getStyleClass().add("client-chip");
+            opcion.setUserData(tipo);
+            opcion.setToggleGroup(grupo);
+            opcion.setSelected(tipo == compra.getTipoCliente());
+            opciones.getChildren().add(opcion);
+        }
+        grupo.selectedToggleProperty().addListener((observable, anterior, actual) -> {
+            if (actual == null) {
+                grupo.selectToggle(anterior);
+                return;
+            }
+            compra.setTipoCliente((TipoCliente) actual.getUserData());
+            alCambiar.run();
+        });
+        return opciones;
     }
 
     private HBox crearFilaProducto(Producto producto, CompraEnCurso compra, Runnable alCambiar) {
@@ -105,13 +168,25 @@ public class CobroViewController {
             compra.quitarProducto(producto);
             refrescar.run();
         });
+        quitar.setAccessibleText("Quitar " + producto.getNombre());
         Button agregar = boton("+", "quantity-button", () -> {
             compra.agregarProducto(producto);
             refrescar.run();
         });
-        HBox fila = new HBox(8, etiqueta(producto.getNombre() + "\n" + Formatos.dinero(producto.getPrecio()), "product-name"),
-                espaciador(), quitar, cantidad, agregar);
+        agregar.setAccessibleText("Agregar " + producto.getNombre());
+
+        VBox informacion = new VBox(2, etiqueta(producto.getNombre(), "product-name"),
+                etiqueta(Formatos.dinero(producto.getPrecio()) + " · " + Formatos.categoria(producto), "muted-text"));
+        HBox fila = new HBox(12, informacion, espaciador(), quitar, cantidad, agregar);
+        fila.setAlignment(Pos.CENTER_LEFT);
         fila.getStyleClass().add("product-row");
+        return fila;
+    }
+
+    private HBox linea(Label concepto, Label valor) {
+        HBox fila = new HBox(10, concepto, espaciador(), valor);
+        fila.setAlignment(Pos.CENTER_LEFT);
+        fila.getStyleClass().add("summary-line");
         return fila;
     }
 
@@ -122,12 +197,5 @@ public class CobroViewController {
         } catch (CinemaUQException | IllegalArgumentException | IllegalStateException exception) {
             mostrarMensaje(Alert.AlertType.ERROR, "No se pudo completar la venta", exception.getMessage());
         }
-    }
-
-    private static String describirProductos(CompraEnCurso compra) {
-        if (compra.getProductos().isEmpty()) return SIN_PRODUCTOS;
-        return compra.getProductos().entrySet().stream()
-                .map(entrada -> entrada.getValue() + " × " + entrada.getKey().getNombre())
-                .collect(Collectors.joining(", "));
     }
 }

@@ -70,6 +70,59 @@ class VentaControllerTest {
     }
 
     @Test
+    void elDesgloseDelResumenCoincideConElCobroDeLaVenta() throws Exception {
+        Sala vip = new Sala("S2", "Sala VIP", 20, TipoSala.VIP);
+        cinema.registrarSala(vip);
+        Funcion funcionVip = new Funcion("F2", funcion.getPelicula(), vip, LocalDate.now().plusDays(1),
+                LocalTime.of(18, 0), 10000);
+        cinema.programarFuncion(funcionVip);
+        CompraEnCurso compra = ventas.iniciarCompra(funcionVip);
+        compra.alternarAsiento(funcionVip.buscarAsiento("A1"));
+        compra.alternarAsiento(funcionVip.buscarAsiento("A2"));
+
+        double tarifas = ventas.totalTarifas(compra);
+        double recargo = ventas.totalRecargo(compra);
+        Cobro cobro = ventas.vender(compra, "Ana", "1").getListVentaCobros().getFirst();
+
+        assertEquals(20000, tarifas, DELTA);
+        assertEquals(10000, recargo, DELTA);
+        assertEquals(cobro.getValorEntrada(), tarifas, DELTA);
+        assertEquals(cobro.getRecargoSala(), recargo, DELTA);
+    }
+
+    @Test
+    void venderSoloConfiteriaCobraLosProductosSinEntradas() throws Exception {
+        CompraEnCurso compra = ventas.iniciarCompraConfiteria();
+        compra.agregarProducto(crispetas);
+        compra.agregarProducto(crispetas);
+
+        Venta venta = ventas.vender(compra, "Ana", "1");
+
+        assertFalse(compra.incluyeEntradas());
+        assertEquals(6000, ventas.total(compra), DELTA);
+        assertEquals(6000, venta.getTotal(), DELTA);
+        assertNull(venta.getFuncion());
+        assertTrue(venta.getListVentaAsientofun().isEmpty());
+        assertTrue(cinema.getListCinemaVentas().contains(venta));
+        assertEquals(0, cinema.totalEntradasVendidas());
+        assertNull(cinema.peliculaMasVendida());
+    }
+
+    @Test
+    void venderConfiteriaSinProductosLanzaExcepcion() {
+        CompraEnCurso compra = ventas.iniciarCompraConfiteria();
+
+        assertThrows(IllegalArgumentException.class, () -> ventas.vender(compra, "Ana", "1"));
+    }
+
+    @Test
+    void unaCompraDeConfiteriaNoAdmiteAsientos() {
+        CompraEnCurso compra = ventas.iniciarCompraConfiteria();
+
+        assertThrows(IllegalStateException.class, () -> compra.alternarAsiento(funcion.buscarAsiento("A1")));
+    }
+
+    @Test
     void venderSinNombreDeClienteLanzaExcepcion() {
         CompraEnCurso compra = ventas.iniciarCompra(funcion);
         compra.alternarAsiento(funcion.buscarAsiento("A1"));

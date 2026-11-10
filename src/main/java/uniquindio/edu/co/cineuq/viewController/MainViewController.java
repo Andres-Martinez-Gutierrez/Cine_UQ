@@ -79,7 +79,7 @@ public class MainViewController implements Navegador {
 
     @FXML
     private void showVentas() {
-        mostrar(funciones.crearPaginaVentas());
+        mostrarVentas();
     }
 
     @FXML
@@ -90,6 +90,16 @@ public class MainViewController implements Navegador {
     @Override
     public void mostrarCartelera() {
         mostrar(cartelera.crearPagina());
+    }
+
+    @Override
+    public void mostrarVentas() {
+        mostrar(cobro.crearPaginaConfiteria());
+    }
+
+    @Override
+    public void mostrarAgendaVentas() {
+        mostrar(funciones.crearPaginaVentas());
     }
 
     @Override

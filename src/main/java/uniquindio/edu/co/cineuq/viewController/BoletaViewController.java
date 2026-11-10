@@ -30,33 +30,38 @@ public class BoletaViewController {
      * @param compra selección con la que se hizo la venta (la venta solo conserva el último producto)
      */
     public Pagina crearPagina(Venta venta, CompraEnCurso compra) {
-        Funcion funcion = venta.getFuncion();
-        Cobro cobroEntradas = venta.getListVentaCobros().getFirst();
-        String asientos = venta.getListVentaAsientofun().stream()
-                .map(asiento -> asiento.getAsiento().getCodigo())
-                .collect(Collectors.joining(", "));
-
         VBox boleta = panel();
         boleta.getStyleClass().add("receipt-card");
         boleta.getChildren().addAll(etiqueta("CineUQ", "receipt-brand"), etiqueta("Boleta de venta", "muted-text"),
                 linea("Boleta", venta.getCodigo()),
                 linea("Fecha", venta.getFechaHora().format(Formatos.FECHA_HORA)),
-                linea("Cliente", venta.getCliente().getNombre()),
-                linea("Función", funcion.getPelicula().getNombre()),
-                linea("Sala / hora", funcion.getSala().getNombre() + " · " + funcion.getHoraInicio().format(Formatos.HORA)),
-                linea("Asientos", asientos),
-                linea("Entradas", Formatos.dinero(cobroEntradas.getValorEntrada())),
-                linea("Recargo de sala", Formatos.dinero(cobroEntradas.getRecargoSala())));
+                linea("Cliente", venta.getCliente().getNombre()));
+
+        Funcion funcion = venta.getFuncion();
+        Cobro cobroEntradas = null;
+        if (funcion != null) {
+            cobroEntradas = venta.getListVentaCobros().getFirst();
+            String asientos = venta.getListVentaAsientofun().stream()
+                    .map(asiento -> asiento.getAsiento().getCodigo())
+                    .collect(Collectors.joining(", "));
+            boleta.getChildren().addAll(
+                    linea("Función", funcion.getPelicula().getNombre()),
+                    linea("Sala / hora", funcion.getSala().getNombre() + " · " + funcion.getHoraInicio().format(Formatos.HORA)),
+                    linea("Asientos", asientos),
+                    linea("Entradas", Formatos.dinero(cobroEntradas.getValorEntrada())),
+                    linea("Recargo de sala", Formatos.dinero(cobroEntradas.getRecargoSala())));
+        }
         for (Map.Entry<Producto, Integer> entrada : compra.getProductos().entrySet()) {
             Producto producto = entrada.getKey();
             boleta.getChildren().add(linea("Producto", entrada.getValue() + " × " + producto.getNombre()
                     + " · " + Formatos.dinero(producto.getPrecio() * entrada.getValue())));
         }
-        if (cobroEntradas.getDescuentoCliente() > 0) {
+        if (cobroEntradas != null && cobroEntradas.getDescuentoCliente() > 0) {
             boleta.getChildren().add(linea("Descuento", "− " + Formatos.dinero(cobroEntradas.getDescuentoCliente())));
         }
         boleta.getChildren().addAll(linea("Total pagado", Formatos.dinero(venta.getTotal())),
-                botonVolver("Volver a cartelera", navegador::mostrarCartelera));
+                new HBox(16, botonVolver("Nueva venta", navegador::mostrarVentas),
+                        botonVolver("Volver a cartelera", navegador::mostrarCartelera)));
         return new Pagina("Boleta", "Venta registrada correctamente", Seccion.VENTAS, desplazable(boleta));
     }
 

@@ -110,6 +110,22 @@ class OperadorTest {
     }
 
     @Test
+    void venderProductosRegistraUnaVentaSinFuncion() {
+        Producto gaseosa = new Producto("B1", "Gaseosa", 5000, CategoriaProducto.BEBIDA, null);
+
+        Venta venta = operador.venderProductos(cinema, cliente, List.of(gaseosa, gaseosa));
+
+        assertEquals(10000, venta.getTotal(), DELTA);
+        assertEquals(EstadoVenta.ACTIVA, venta.getEstado());
+        assertTrue(cinema.getListCinemaVentas().contains(venta));
+    }
+
+    @Test
+    void venderProductosSinProductosLanzaExcepcion() {
+        assertThrows(IllegalArgumentException.class, () -> operador.venderProductos(cinema, cliente, List.of()));
+    }
+
+    @Test
     void funcionesDiaDelegaEnLasFuncionesDelCine() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
 
