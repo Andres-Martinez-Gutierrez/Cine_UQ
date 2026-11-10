@@ -23,21 +23,31 @@ public class Pelicula {
     /**
      * Constructor de la clase Pelicula.
      *
-     * @param codigo código de la película
-     * @param nombre título de la película
-     * @param genero género cinematográfico de la película
+     * @param codigo          código de la película
+     * @param nombre          título de la película
+     * @param genero          género cinematográfico de la película
      * @param duracionMinutos duración de la película en minutos
      */
-    public Pelicula(String codigo, String nombre, Genero genero, int duracionMinutos, Clasificacion clasificacion) {
+    public Pelicula(String codigo, String nombre, Genero genero, int duracionMinutos) {
+        this(codigo, nombre, genero, Clasificacion.TODOS, duracionMinutos);
+    }
+
+    /**
+     * Constructor de película con clasificación por edades.
+     */
+    public Pelicula(String codigo, String nombre, Genero genero, Clasificacion clasificacion, int duracionMinutos) {
         this();
         this.codigo = codigo;
         this.nombre = nombre;
         this.genero = genero;
+        this.clasificacion = clasificacion;
         this.duracionMinutos = duracionMinutos;
         this.clasificacion = clasificacion;
     }
 
-    /** Marca la película como no disponible. */
+    /**
+     * Marca la película como no disponible.
+     */
     public void deshabilitar() {
         estado = EstadoPelicula.NO_DISPONIBLE;
     }
@@ -93,6 +103,7 @@ public class Pelicula {
     @Override
     public String toString() {
         return "Pelicula{codigo='" + codigo + "', nombre='" + nombre + "', genero=" + genero
+                + ", clasificacion=" + clasificacion
                 + ", duracionMinutos=" + duracionMinutos + ", estado=" + estado + "}";
     }
 }

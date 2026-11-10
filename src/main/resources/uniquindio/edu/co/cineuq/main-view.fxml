@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="800.0" prefWidth="1280.0" styleClass="app-root"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="uniquindio.edu.co.cineuq.viewController.MainController">
+    <left>
+        <VBox prefWidth="200.0" minWidth="190.0" spacing="30.0" styleClass="sidebar">
+            <padding>
+                <Insets bottom="24.0" left="18.0" right="18.0" top="28.0"/>
+            </padding>
+            <VBox spacing="5.0">
+                <Label text="CineUQ" styleClass="brand"/>
+                <Label text="EXPERIENCIA DE CINE" styleClass="brand-caption"/>
+            </VBox>
+            <VBox spacing="8.0">
+                <Button fx:id="carteleraButton" maxWidth="Infinity" onAction="#showCartelera"
+                        styleClass="nav-button" text="Cartelera"/>
+                <Button fx:id="funcionesButton" maxWidth="Infinity" onAction="#showFunciones"
+                        styleClass="nav-button" text="Funciones"/>
+                <Button fx:id="ventasButton" maxWidth="Infinity" onAction="#showVentas"
+                        styleClass="nav-button" text="Ventas"/>
+                <Button fx:id="administracionButton" maxWidth="Infinity" onAction="#showAdministracion"
+                        styleClass="nav-button" text="Administración"/>
+            </VBox>
+            <VBox VBox.vgrow="ALWAYS"/>
+            <Label text="Modo demostración · datos en memoria" styleClass="sidebar-footer" wrapText="true"/>
+        </VBox>
+    </left>
+    <center>
+        <VBox spacing="24.0" styleClass="workspace">
+            <padding>
+                <Insets bottom="32.0" left="36.0" right="36.0" top="32.0"/>
+            </padding>
+            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="page-header">
+                <VBox spacing="6.0">
+                    <Label text="PLATAFORMA DE GESTIÓN" styleClass="page-eyebrow"/>
+                    <Label fx:id="pageTitle" text="Cartelera" styleClass="page-title"/>
+                    <Label fx:id="pageDescription" styleClass="page-description"
+                           wrapText="true"/>
+                </VBox>
+            </HBox>
+            <VBox fx:id="pageContent" spacing="16.0" VBox.vgrow="ALWAYS"/>
+        </VBox>
+    </center>
+</BorderPane>
