@@ -8,15 +8,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class Venta {
+
+    //Atributos de la clase Venta
     private String codigo;
     private LocalDateTime fechaHora;
+
+
     private Cliente cliente;
     private Funcion funcion;
-    private Cobro cobro;
-    private List<AsientoFuncion> asientos;
-    private List<Producto> productos;
+    private List<Cobro> listVentaCobros;
+    private List<AsientoFuncion> listVentaAsientofun;
+    private Producto producto;
     private List<Boleta> listVentaBoletas;
-    private EstadoVenta estado= EstadoVenta.ACTIVA;;
+    private EstadoVenta estado= EstadoVenta.ACTIVA;
 
     /**
      * Constructor vacío de la clase Venta.
@@ -31,42 +35,49 @@ public class Venta {
      * @param fechaHora fecha y hora en que se realiza la venta
      * @param cliente cliente que realiza la compra
      * @param funcion función para la que se venden los asientos
-     * @param cobro cobro que detalla el total a pagar
      * @param estado venya que detalla si la venta fue ACTIVA o CANCELADA
      */
-    public Venta(EstadoVenta estado, Cobro cobro, Funcion funcion, Cliente cliente, LocalDateTime fechaHora, String codigo) {
+    public Venta(EstadoVenta estado, Funcion funcion, Cliente cliente, LocalDateTime fechaHora, String codigo, Producto producto) {
         this.estado = estado;
         this.listVentaBoletas = new ArrayList<>();
-        this.productos = new ArrayList<>();
-        this.asientos = new ArrayList<>();
-        this.cobro = cobro;
+        this.producto = producto;
+        this.listVentaAsientofun = new ArrayList<>();
         this.funcion = funcion;
         this.cliente = cliente;
         this.fechaHora = fechaHora;
         this.codigo = codigo;
+        this.listVentaCobros = new ArrayList<>();
     }
 
     /** Agrega un asiento vendido a la venta. */
     void agregarAsiento(AsientoFuncion asiento) {
-        asientos.add(asiento);
+        listVentaAsientofun.add(asiento);
     }
 
     /** Agrega un producto a la venta y suma su precio al cobro. */
     public void agregarProducto(Producto producto) {
-        productos.add(producto);
-        cobro.agregarValorProductos(producto.getPrecio());
+        this.producto = producto; // Asigna el producto en singular
+
+        // Creamos un cobro por el valor del producto y lo agregamos a la lista
+        Cobro cobroProducto = new Cobro(0, 0, producto.getPrecio());
+        this.listVentaCobros.add(cobroProducto);
     }
+
 
     /** Cancela la venta y libera sus asientos. No hace nada si ya estaba cancelada. */
     public void cancelar() {
         if (estado == EstadoVenta.CANCELADA) return;
         estado = EstadoVenta.CANCELADA;
-        asientos.forEach(AsientoFuncion::liberar);
+        listVentaAsientofun.forEach(AsientoFuncion::liberar);
     }
 
     public double getTotal() {
-        return cobro.calcularTotal();
+        // Recorre la lista de cobros y suma el cálculo total de cada uno
+        return listVentaCobros.stream()
+                .mapToDouble(Cobro::calcularTotal)
+                .sum();
     }
+
 
     public String getCodigo() {
         return codigo;
@@ -100,28 +111,36 @@ public class Venta {
         this.funcion = funcion;
     }
 
-    public Cobro getCobro() {
-        return cobro;
+    public List<AsientoFuncion> getListVentaAsientofun() {
+        return Collections.unmodifiableList(listVentaAsientofun);
     }
 
-    public void setCobro(Cobro cobro) {
-        this.cobro = cobro;
+    public void setListVentaAsientofun(List<AsientoFuncion> listVentaAsientofun) {
+        this.listVentaAsientofun = new ArrayList<>(listVentaAsientofun);
     }
 
-    public List<AsientoFuncion> getAsientos() {
-        return Collections.unmodifiableList(asientos);
+    public List<Cobro> getListVentaCobros() {
+        return listVentaCobros;
     }
 
-    public void setAsientos(List<AsientoFuncion> asientos) {
-        this.asientos = new ArrayList<>(asientos);
+    public void setListVentaCobros(List<Cobro> listVentaCobros) {
+        this.listVentaCobros = listVentaCobros;
     }
 
-    public List<Producto> getProductos() {
-        return Collections.unmodifiableList(productos);
+    public List<Boleta> getListVentaBoletas() {
+        return listVentaBoletas;
     }
 
-    public void setProductos(List<Producto> productos) {
-        this.productos = new ArrayList<>(productos);
+    public void setListVentaBoletas(List<Boleta> listVentaBoletas) {
+        this.listVentaBoletas = listVentaBoletas;
+    }
+
+    public Producto getProducto() {
+        return producto;
+    }
+
+    public void setProducto(Producto producto) {
+        this.producto = producto;
     }
 
     public EstadoVenta getEstado() {
@@ -134,10 +153,13 @@ public class Venta {
 
     @Override
     public String toString() {
-        return "Venta{codigo='" + codigo + "', fechaHora=" + fechaHora
-                + ", cliente=" + (cliente == null ? null : cliente.getIdentificacion())
-                + ", funcion=" + (funcion == null ? null : funcion.getCodigo())
-                + ", asientos=" + asientos.size() + ", productos=" + productos.size()
-                + ", total=" + getTotal() + ", estado=" + estado + "}";
+        return "Venta{" +
+                "codigo='" + codigo + '\'' +
+                ", fechaHora=" + fechaHora +
+                ", cliente=" + cliente +
+                ", funcion=" + funcion +
+                ", producto=" + producto +
+                ", estado=" + estado +
+                '}';
     }
 }

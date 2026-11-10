@@ -44,7 +44,7 @@ class OperadorTest {
 
         assertEquals(15000, venta.getTotal(), DELTA);
         assertEquals(EstadoVenta.ACTIVA, venta.getEstado());
-        assertEquals(1, venta.getAsientos().size());
+        assertEquals(1, venta.getListVentaAsientofun().size());
     }
 
     @Test

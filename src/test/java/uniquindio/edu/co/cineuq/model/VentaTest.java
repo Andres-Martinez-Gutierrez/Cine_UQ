@@ -36,7 +36,7 @@ class VentaTest {
     void agregarAsientoAgregaElAsientoALaVenta() {
         venta.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1, null)));
 
-        assertEquals(1, venta.getAsientos().size());
+        assertEquals(1, venta.getListVentaAsientofun().size());
     }
 
     @Test

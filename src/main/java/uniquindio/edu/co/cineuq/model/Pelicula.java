@@ -4,13 +4,20 @@ import uniquindio.edu.co.cineuq.model.enumeraciones.Clasificacion;
 import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoPelicula;
 import uniquindio.edu.co.cineuq.model.enumeraciones.Genero;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pelicula {
+    //Atrubutos de la clase pelicula
     private String codigo;
     private String nombre;
-    private Genero genero;
     private int duracionMinutos;
+
+    //Relaciones de la clase Pelicula
     private EstadoPelicula estado;
     private Clasificacion clasificacion;
+    private Genero genero;
+    private List<Funcion> listPeliculaFunciones;
 
     /**
      * Constructor vacío de la clase Pelicula.
@@ -43,6 +50,7 @@ public class Pelicula {
         this.clasificacion = clasificacion;
         this.duracionMinutos = duracionMinutos;
         this.clasificacion = clasificacion;
+        this.listPeliculaFunciones = new ArrayList<>();
     }
 
     /**
@@ -98,6 +106,14 @@ public class Pelicula {
 
     public void setClasificacion(Clasificacion clasificacion) {
         this.clasificacion = clasificacion;
+    }
+
+    public List<Funcion> getListPeliculaFunciones() {
+        return listPeliculaFunciones;
+    }
+
+    public void setListPeliculaFunciones(List<Funcion> listPeliculaFunciones) {
+        this.listPeliculaFunciones = listPeliculaFunciones;
     }
 
     @Override

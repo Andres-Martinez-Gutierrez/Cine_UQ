@@ -119,7 +119,7 @@ public class CinemaUQ {
     public int totalEntradasVendidas() {
         return listCinemaVentas.stream()
                 .filter(v -> v.getEstado() == EstadoVenta.ACTIVA)
-                .mapToInt(v -> v.getAsientos().size())
+                .mapToInt(v -> v.getListVentaAsientofun().size())
                 .sum();
     }
 
@@ -136,7 +136,7 @@ public class CinemaUQ {
         Map<Pelicula, Integer> entradas = new HashMap<>();
         for (Venta v : listCinemaVentas) {
             if (v.getEstado() != EstadoVenta.ACTIVA) continue;
-            entradas.merge(v.getFuncion().getPelicula(), v.getAsientos().size(), Integer::sum);
+            entradas.merge(v.getFuncion().getPelicula(), v.getListVentaAsientofun().size(), Integer::sum);
         }
         return entradas.entrySet().stream()
                 .max(Map.Entry.comparingByValue())
