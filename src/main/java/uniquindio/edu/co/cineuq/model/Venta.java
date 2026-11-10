@@ -1,5 +1,7 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoVenta;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,16 +15,13 @@ public class Venta {
     private Cobro cobro;
     private List<AsientoFuncion> asientos;
     private List<Producto> productos;
-    private EstadoVenta estado;
+    private List<Boleta> listVentaBoletas;
+    private EstadoVenta estado= EstadoVenta.ACTIVA;;
 
     /**
      * Constructor vacío de la clase Venta.
-     * Deja las listas de asientos y productos vacías y el estado en ACTIVA.
      */
     public Venta() {
-        this.asientos = new ArrayList<>();
-        this.productos = new ArrayList<>();
-        this.estado = EstadoVenta.ACTIVA;
     }
 
     /**
@@ -33,14 +32,18 @@ public class Venta {
      * @param cliente cliente que realiza la compra
      * @param funcion función para la que se venden los asientos
      * @param cobro cobro que detalla el total a pagar
+     * @param estado venya que detalla si la venta fue ACTIVA o CANCELADA
      */
-    public Venta(String codigo, LocalDateTime fechaHora, Cliente cliente, Funcion funcion, Cobro cobro) {
-        this();
-        this.codigo = codigo;
-        this.fechaHora = fechaHora;
-        this.cliente = cliente;
-        this.funcion = funcion;
+    public Venta(EstadoVenta estado, Cobro cobro, Funcion funcion, Cliente cliente, LocalDateTime fechaHora, String codigo) {
+        this.estado = estado;
+        this.listVentaBoletas = new ArrayList<>();
+        this.productos = new ArrayList<>();
+        this.asientos = new ArrayList<>();
         this.cobro = cobro;
+        this.funcion = funcion;
+        this.cliente = cliente;
+        this.fechaHora = fechaHora;
+        this.codigo = codigo;
     }
 
     /** Agrega un asiento vendido a la venta. */

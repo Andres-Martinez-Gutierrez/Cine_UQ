@@ -1,12 +1,13 @@
 package uniquindio.edu.co.cineuq.model;
 
 import uniquindio.edu.co.cineuq.exception.AsientoOcupadoException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoAsiento;
 
 public class AsientoFuncion {
 
     //Relaciones de la clase AsientoFuncion
     private Asiento asiento;
-    private EstadoAsiento estado;
+    private EstadoAsiento estado = EstadoAsiento.DISPONIBLE;
     private Venta venta;
 
     /**
@@ -14,7 +15,6 @@ public class AsientoFuncion {
      * Deja el estado del asiento en DISPONIBLE; el asiento se asigna luego con el setter.
      */
     public AsientoFuncion() {
-        this.estado = EstadoAsiento.DISPONIBLE;
     }
 
     /**

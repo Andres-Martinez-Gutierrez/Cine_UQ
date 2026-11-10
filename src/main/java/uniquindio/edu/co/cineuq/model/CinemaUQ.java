@@ -5,6 +5,10 @@ import uniquindio.edu.co.cineuq.exception.PeliculaDuplicadaException;
 import uniquindio.edu.co.cineuq.exception.SalaDuplicadaException;
 import uniquindio.edu.co.cineuq.exception.SalaNoDisponibleException;
 import uniquindio.edu.co.cineuq.exception.VentaNoEncontradaException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoFuncion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoSala;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoVenta;
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
