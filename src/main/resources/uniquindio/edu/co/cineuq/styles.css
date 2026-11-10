@@ -1,0 +1,88 @@
+.app-root {
+    -fx-background-color: #f5f4f2;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.sidebar {
+    -fx-background-color: #1d1d20;
+}
+
+.brand {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 21px;
+    -fx-font-weight: bold;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #d7d5d4;
+    -fx-font-size: 13px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 11px 12px;
+    -fx-cursor: hand;
+}
+
+.nav-button:hover {
+    -fx-background-color: #333337;
+    -fx-text-fill: #ffffff;
+}
+
+.nav-button-active {
+    -fx-background-color: #373438;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+.sidebar-footer {
+    -fx-text-fill: #a7a4a3;
+    -fx-font-size: 11px;
+}
+
+.workspace {
+    -fx-background-color: #f5f4f2;
+}
+
+.page-title {
+    -fx-text-fill: #242326;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+}
+
+.page-description {
+    -fx-text-fill: #6f6c6d;
+    -fx-font-size: 13px;
+}
+
+.module-card {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 9px;
+    -fx-border-color: #e8e5e3;
+    -fx-border-radius: 9px;
+    -fx-padding: 24px;
+}
+
+.card-eyebrow {
+    -fx-text-fill: #a33a32;
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+}
+
+.card-title {
+    -fx-text-fill: #242326;
+    -fx-font-size: 19px;
+    -fx-font-weight: bold;
+}
+
+.card-message {
+    -fx-text-fill: #5e5b5c;
+    -fx-font-size: 13px;
+}
+
+.next-step {
+    -fx-background-color: #f8f2f0;
+    -fx-background-radius: 6px;
+    -fx-text-fill: #71342f;
+    -fx-padding: 12px;
+    -fx-font-size: 12px;
+}
