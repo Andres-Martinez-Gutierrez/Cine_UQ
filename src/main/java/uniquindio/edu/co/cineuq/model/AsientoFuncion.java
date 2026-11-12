@@ -1,26 +1,27 @@
 package uniquindio.edu.co.cineuq.model;
 
 import uniquindio.edu.co.cineuq.exception.AsientoOcupadoException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoAsiento;
 
 public class AsientoFuncion {
+
+    //Relaciones de la clase AsientoFuncion
     private Asiento asiento;
-    private EstadoAsiento estado;
+    private EstadoAsiento estado = EstadoAsiento.DISPONIBLE;
+    private Venta venta;
 
     /**
      * Constructor vacío de la clase AsientoFuncion.
      * Deja el estado del asiento en DISPONIBLE; el asiento se asigna luego con el setter.
      */
     public AsientoFuncion() {
-        this.estado = EstadoAsiento.DISPONIBLE;
     }
 
     /**
      * Constructor de la clase AsientoFuncion.
-     *
-     * @param asiento asiento físico de la sala al que corresponde este registro
      */
-    public AsientoFuncion(Asiento asiento) {
-        this();
+    public AsientoFuncion(Venta venta, Asiento asiento) {
+        this.venta = venta;
         this.asiento = asiento;
     }
 
@@ -42,14 +43,6 @@ public class AsientoFuncion {
         return estado == EstadoAsiento.DISPONIBLE;
     }
 
-    public Asiento getAsiento() {
-        return asiento;
-    }
-
-    public void setAsiento(Asiento asiento) {
-        this.asiento = asiento;
-    }
-
     public EstadoAsiento getEstado() {
         return estado;
     }
@@ -58,9 +51,28 @@ public class AsientoFuncion {
         this.estado = estado;
     }
 
+    public Asiento getAsiento() {
+        return asiento;
+    }
+
+    public void setAsiento(Asiento asiento) {
+        this.asiento = asiento;
+    }
+
+    public Venta getVenta() {
+        return venta;
+    }
+
+    public void setVenta(Venta venta) {
+        this.venta = venta;
+    }
+
     @Override
     public String toString() {
-        return "AsientoFuncion{asiento=" + (asiento == null ? null : asiento.getCodigo())
-                + ", estado=" + estado + "}";
+        return "AsientoFuncion{" +
+                "asiento=" + asiento +
+                ", estado=" + estado +
+                ", venta=" + venta +
+                '}';
     }
 }

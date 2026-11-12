@@ -1,9 +1,20 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cliente {
+
+    //Atributos de la clase Cliente
     private String identificacion;
     private String nombre;
+
+    //Relaciones de la Clase Cliente
     private TipoCliente tipo;
+    private List<Venta> listClientesVenta;
+
 
     /**
      * Constructor vacío de la clase Cliente.
@@ -23,6 +34,7 @@ public class Cliente {
         this.identificacion = identificacion;
         this.nombre = nombre;
         this.tipo = tipo;
+        this.listClientesVenta = new ArrayList<>();
     }
 
     public String getIdentificacion() {
@@ -47,6 +59,14 @@ public class Cliente {
 
     public void setTipo(TipoCliente tipo) {
         this.tipo = tipo;
+    }
+
+    public List<Venta> getListClientesVenta() {
+        return listClientesVenta;
+    }
+
+    public void setListClientesVenta(List<Venta> listClientesVenta) {
+        this.listClientesVenta = listClientesVenta;
     }
 
     @Override

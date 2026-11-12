@@ -1,11 +1,16 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.CategoriaProducto;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class Combo extends Producto {
     /** Descuento como fracción: 0.1 equivale al 10 %. */
+    //Atributos de la clase Combo
     private double descuento;
+
+    //Relacion de la clase Combo
     private List<Producto> productos;
 
     /**
