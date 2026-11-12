@@ -1,9 +1,11 @@
 package uniquindio.edu.co.cineuq.model;
 
 import uniquindio.edu.co.cineuq.exception.CinemaUQException;
+import uniquindio.edu.co.cineuq.exception.PeliculaDuplicadaException;
+import uniquindio.edu.co.cineuq.exception.SalaDuplicadaException;
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
 
 public class Administrador extends Usuario {
-    private CinemaUQ cinema;
 
     /**
      * Constructor vacío de la clase Administrador.
@@ -15,44 +17,48 @@ public class Administrador extends Usuario {
     /**
      * Constructor de la clase Administrador.
      *
-     * @param usuario nombre de usuario con el que inicia sesión
+     * @param usuario    nombre de usuario con el que inicia sesión
      * @param contrasena contraseña del administrador
-     * @param nombre nombre completo del administrador
-     * @param cinema cine que el administrador gestiona
+     * @param nombre     nombre completo del administrador
      */
-    public Administrador(String usuario, String contrasena, String nombre, CinemaUQ cinema) {
+    public Administrador(String usuario, String contrasena, String nombre) {
         super(usuario, contrasena, nombre);
-        this.cinema = cinema;
     }
 
-    /** Operación de interfaz: se implementa en la capa de controladores. */
-    public void gestionarPeliculas() {
+    /**
+     * Registra una película en el cine administrado.
+     */
+    public void gestionarPeliculas(CinemaUQ cinema, Pelicula pelicula) throws PeliculaDuplicadaException {
+        cinema.registrarPelicula(pelicula);
     }
 
-    /** Operación de interfaz: se implementa en la capa de controladores. */
-    public void gestionarSalas() {
+    /**
+     * Registra una sala en el cine administrado.
+     */
+    public void gestionarSalas(CinemaUQ cinema, Sala sala) throws SalaDuplicadaException {
+        cinema.registrarSala(sala);
     }
 
-    /** Programa una función en el cine, validando que no se traslape con otra de la misma sala. */
-    public void programarFuncion(Funcion funcion) throws CinemaUQException {
+    /**
+     * Programa una función en el cine, validando que no se traslape con otra de la misma sala.
+     */
+    public void programarFuncion(CinemaUQ cinema, Funcion funcion) throws CinemaUQException {
         cinema.programarFuncion(funcion);
     }
 
-    /** Actualiza el valor de la tarifa del tipo de cliente indicado. */
-    public void cambiarTarifa(TipoCliente tipo, double valor) {
+    /**
+     * Actualiza el valor de la tarifa del tipo de cliente indicado.
+     */
+    public void cambiarTarifa(CinemaUQ cinema, TipoCliente tipo, double valor) {
         cinema.buscarTarifa(tipo).actualizarValor(valor);
-    }
-
-    public CinemaUQ getCinema() {
-        return cinema;
-    }
-
-    public void setCinema(CinemaUQ cinema) {
-        this.cinema = cinema;
     }
 
     @Override
     public String toString() {
-        return "Administrador{usuario='" + getUsuario() + "', nombre='" + getNombre() + "'}";
+        return "Administrador{" +
+                "='" + getUsuario() +
+                "', " +
+                "nombre='" + getNombre()
+                + "'}";
     }
 }

@@ -397,17 +397,57 @@
 }
 
 .product-row {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #e8e5e3;
-    -fx-border-radius: 5px;
-    -fx-background-radius: 5px;
-    -fx-padding: 8px 10px;
+    -fx-background-color: transparent;
+    -fx-border-color: #e8e5e3 transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 10px 0;
     -fx-alignment: center-left;
 }
 
 .product-name {
-    -fx-text-fill: #393638;
+    -fx-text-fill: #242326;
+    -fx-font-size: 13px;
+}
+
+.client-chip {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #d7d1ce;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-text-fill: #242326;
     -fx-font-size: 11px;
+    -fx-padding: 7px 15px;
+    -fx-cursor: hand;
+}
+
+.client-chip:hover {
+    -fx-background-color: #f3efed;
+}
+
+.client-chip:selected {
+    -fx-background-color: #29272a;
+    -fx-border-color: #29272a;
+    -fx-text-fill: #ffffff;
+}
+
+.checkout-summary {
+    -fx-max-width: 360px;
+}
+
+.summary-line {
+    -fx-padding: 2px 0;
+}
+
+.summary-label,
+.summary-value {
+    -fx-text-fill: #393638;
+    -fx-font-size: 12px;
+}
+
+.summary-total {
+    -fx-border-color: #e8e5e3 transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 12px 0 4px 0;
 }
 
 .product-quantity {
@@ -420,13 +460,14 @@
 
 .quantity-button {
     -fx-background-color: #ffffff;
-    -fx-border-color: #d7d1ce;
-    -fx-border-radius: 4px;
-    -fx-background-radius: 4px;
-    -fx-min-width: 24px;
-    -fx-min-height: 24px;
+    -fx-border-color: #8a8486;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
     -fx-padding: 0;
-    -fx-text-fill: #494547;
+    -fx-text-fill: #242326;
+    -fx-font-size: 16px;
     -fx-cursor: hand;
 }
 

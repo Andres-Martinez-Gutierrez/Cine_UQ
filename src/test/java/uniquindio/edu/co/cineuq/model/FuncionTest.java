@@ -22,7 +22,7 @@ class FuncionTest {
 
     @BeforeEach
     void setUp() {
-        pelicula = new Pelicula("P1", "Pelicula", Genero.ACCION, 120, Clasificacion.TODOS);
+        pelicula = new Pelicula("P1", "Pelicula", Genero.ACCION, Clasificacion.TODOS, 120);
         Sala sala = new Sala("S1", "Sala 1", 20, TipoSala.TRADICIONAL);
         funcion = new Funcion("F1", pelicula, sala, LocalDate.of(2026, 11, 10), LocalTime.of(14, 0), 10000);
     }

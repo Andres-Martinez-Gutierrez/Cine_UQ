@@ -7,9 +7,12 @@ import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoVenta;
 import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class VentaTest {
@@ -21,22 +24,24 @@ class VentaTest {
     void setUp() {
         Cobro cobro = new Cobro(10000, 0, 0);
         Cliente cliente = new Cliente("1", "Ana", TipoCliente.GENERAL);
-        venta = new Venta(EstadoVenta.ACTIVA, cobro, null, cliente, LocalDateTime.now(), "V1");
+        venta = new Venta(EstadoVenta.ACTIVA, null, cliente, LocalDateTime.now(), "V1", null);
+        venta.setListVentaCobros(new ArrayList<>(List.of(cobro)));
     }
 
     @Test
     void agregarProductoSumaSuPrecioAlCobro() {
-        venta.agregarProducto(new Producto("C1", "Crispetas", 3000, CategoriaProducto.COMIDA));
+        Producto crispetas = new Producto("C1", "Crispetas", 3000, CategoriaProducto.COMIDA, null);
+        venta.agregarProducto(crispetas);
 
         assertEquals(13000, venta.getTotal(), DELTA);
-        assertEquals(1, venta.getProductos().size());
+        assertSame(crispetas, venta.getProducto());
     }
 
     @Test
     void agregarAsientoAgregaElAsientoALaVenta() {
         venta.agregarAsiento(new AsientoFuncion(null, new Asiento("A1", 'A', 1, null)));
 
-        assertEquals(1, venta.getAsientos().size());
+        assertEquals(1, venta.getListVentaAsientofun().size());
     }
 
     @Test

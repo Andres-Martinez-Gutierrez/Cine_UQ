@@ -27,29 +27,33 @@ class OperadorTest {
         cinema = new CinemaUQ("CineUQ", "Armenia", "900123456");
         cinema.buscarTarifa(TipoCliente.GENERAL).actualizarValor(10000);
         operador = new Operador("operador", "clave", "Operador", cinema);
-        pelicula = new Pelicula("P1", "Pelicula", Genero.ACCION, 120, Clasificacion.TODOS);
+        pelicula = new Pelicula("P1", "Pelicula", Genero.ACCION, Clasificacion.TODOS, 120);
         cliente = new Cliente("1", "Ana", TipoCliente.GENERAL);
     }
 
-    private Funcion funcion(TipoSala tipo, int capacidad) {
+    private Funcion funcion(TipoSala tipo, int capacidad) throws Exception {
         Sala sala = new Sala("S1", "Sala 1", capacidad, tipo);
-        return new Funcion("A1", pelicula, sala, FECHA, LocalTime.of(14, 0), 10000);
+        cinema.registrarPelicula(pelicula);
+        cinema.registrarSala(sala);
+        Funcion funcion = new Funcion("A1", pelicula, sala, FECHA, LocalTime.of(14, 0), 10000);
+        cinema.programarFuncion(funcion);
+        return funcion;
     }
 
     @Test
     void venderCalculaElValorConLaTarifaYElRecargoDeLaSala() throws Exception {
         Funcion funcion = funcion(TipoSala.VIP, 20);
 
-        Venta venta = operador.vender(funcion, cliente, "A1");
+        Venta venta = operador.vender(cinema,funcion, cliente, "A1");
 
         assertEquals(15000, venta.getTotal(), DELTA);
         assertEquals(EstadoVenta.ACTIVA, venta.getEstado());
-        assertEquals(1, venta.getAsientos().size());
+        assertEquals(1, venta.getListVentaAsientofun().size());
     }
 
     @Test
     void venderRegistraLaVentaEnElCine() throws Exception {
-        Venta venta = operador.vender(funcion(TipoSala.TRADICIONAL, 20), cliente, "A1");
+        Venta venta = operador.vender(cinema,funcion(TipoSala.TRADICIONAL, 20), cliente, "A1");
 
         assertTrue(cinema.getListCinemaVentas().contains(venta));
     }
@@ -58,7 +62,7 @@ class OperadorTest {
     void venderOcupaElAsientoVendido() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
 
-        operador.vender(funcion, cliente, "A1");
+        operador.vender(cinema,funcion, cliente, "A1");
 
         assertFalse(funcion.buscarAsiento("A1").estaDisponible());
     }
@@ -66,38 +70,38 @@ class OperadorTest {
     @Test
     void venderUnAsientoYaOcupadoLanzaExcepcion() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
-        operador.vender(funcion, cliente, "A1");
+        operador.vender(cinema,funcion, cliente, "A1");
 
-        assertThrows(AsientoOcupadoException.class, () -> operador.vender(funcion, cliente, "A1"));
+        assertThrows(AsientoOcupadoException.class, () -> operador.vender(cinema,funcion, cliente, "A1"));
     }
 
     @Test
-    void venderUnAsientoInexistenteLanzaExcepcion() {
+    void venderUnAsientoInexistenteLanzaExcepcion() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
 
-        assertThrows(IllegalArgumentException.class, () -> operador.vender(funcion, cliente, "Z99"));
+        assertThrows(IllegalArgumentException.class, () -> operador.vender(cinema,funcion, cliente, "Z99"));
     }
 
     @Test
-    void venderEnUnaFuncionCanceladaLanzaExcepcion() {
+    void venderEnUnaFuncionCanceladaLanzaExcepcion() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
         funcion.setEstado(EstadoFuncion.CANCELADA);
 
-        assertThrows(IllegalStateException.class, () -> operador.vender(funcion, cliente, "A1"));
+        assertThrows(IllegalStateException.class, () -> operador.vender(cinema,funcion, cliente, "A1"));
     }
 
     @Test
     void venderSinAsientosDisponiblesLanzaExcepcion() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 1);
-        operador.vender(funcion, cliente, "A1");
+        operador.vender(cinema,funcion, cliente, "A1");
 
-        assertThrows(SinAsientosDisponiblesException.class, () -> operador.vender(funcion, cliente, "A1"));
+        assertThrows(SinAsientosDisponiblesException.class, () -> operador.vender(cinema,funcion, cliente, "A1"));
     }
 
     @Test
     void cancelarVentaCambiaSuEstadoYLiberaSusAsientos() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
-        Venta venta = operador.vender(funcion, cliente, "A1");
+        Venta venta = operador.vender(cinema,funcion, cliente, "A1");
 
         operador.cancelarVenta(venta);
 
@@ -106,9 +110,24 @@ class OperadorTest {
     }
 
     @Test
+    void venderProductosRegistraUnaVentaSinFuncion() {
+        Producto gaseosa = new Producto("B1", "Gaseosa", 5000, CategoriaProducto.BEBIDA, null);
+
+        Venta venta = operador.venderProductos(cinema, cliente, List.of(gaseosa, gaseosa));
+
+        assertEquals(10000, venta.getTotal(), DELTA);
+        assertEquals(EstadoVenta.ACTIVA, venta.getEstado());
+        assertTrue(cinema.getListCinemaVentas().contains(venta));
+    }
+
+    @Test
+    void venderProductosSinProductosLanzaExcepcion() {
+        assertThrows(IllegalArgumentException.class, () -> operador.venderProductos(cinema, cliente, List.of()));
+    }
+
+    @Test
     void funcionesDiaDelegaEnLasFuncionesDelCine() throws Exception {
         Funcion funcion = funcion(TipoSala.TRADICIONAL, 20);
-        cinema.programarFuncion(funcion);
 
         assertEquals(List.of(funcion), operador.funcionesDia(FECHA));
     }

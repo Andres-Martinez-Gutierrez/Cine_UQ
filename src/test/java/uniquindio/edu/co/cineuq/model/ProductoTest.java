@@ -10,7 +10,7 @@ class ProductoTest {
 
     @Test
     void actualizarPrecioCambiaElPrecioDelProducto() {
-        Producto producto = new Producto("B1", "Gaseosa", 3000, CategoriaProducto.BEBIDA);
+        Producto producto = new Producto("B1", "Gaseosa", 3000, CategoriaProducto.BEBIDA, null);
 
         producto.actualizarPrecio(3500);
 
