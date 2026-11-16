@@ -1,9 +1,17 @@
 package uniquindio.edu.co.cineuq.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Asiento {
+    //Atributos de la clase Asiento
     private String codigo;
     private char fila;
     private int numero;
+    private Boleta boleta;
+
+    //Relaciones de la clase Asiento
+    private List<Asiento> listAsientofunAsiento;
 
     /**
      * Constructor vacío de la clase Asiento.
@@ -18,11 +26,22 @@ public class Asiento {
      * @param codigo código del asiento (fila y número, por ejemplo "A5")
      * @param fila letra de la fila del asiento
      * @param numero número del asiento dentro de su fila
+     * @param boleta comprobante de tu asiento
      */
-    public Asiento(String codigo, char fila, int numero) {
+    public Asiento(String codigo, char fila, int numero, Boleta boleta) {
         this.codigo = codigo;
         this.fila = fila;
         this.numero = numero;
+        this.boleta = boleta;
+        this.listAsientofunAsiento = new ArrayList<>();
+    }
+
+    public Boleta getBoleta() {
+        return boleta;
+    }
+
+    public void setBoleta(Boleta boleta) {
+        this.boleta = boleta;
     }
 
     public String getCodigo() {
@@ -49,8 +68,22 @@ public class Asiento {
         this.numero = numero;
     }
 
+    public List<Asiento> getListAsientofunAsiento() {
+        return listAsientofunAsiento;
+    }
+
+    public void setListAsientofunAsiento(List<Asiento> listAsientofunAsiento) {
+        this.listAsientofunAsiento = listAsientofunAsiento;
+    }
+
     @Override
     public String toString() {
-        return "Asiento{codigo='" + codigo + "', fila=" + fila + ", numero=" + numero + "}";
+        return "Asiento{" +
+                "codigo='" + codigo + '\'' +
+                ", fila=" + fila +
+                ", numero=" + numero +
+                ", theAsientoBoleta=" + boleta +
+                ", listAsientofunAsiento=" + listAsientofunAsiento +
+                '}';
     }
 }

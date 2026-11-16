@@ -1,11 +1,23 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.Clasificacion;
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoPelicula;
+import uniquindio.edu.co.cineuq.model.enumeraciones.Genero;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pelicula {
+    //Atrubutos de la clase pelicula
     private String codigo;
     private String nombre;
-    private Genero genero;
     private int duracionMinutos;
+
+    //Relaciones de la clase Pelicula
     private EstadoPelicula estado;
+    private Clasificacion clasificacion;
+    private Genero genero;
+    private List<Funcion> listPeliculaFunciones;
 
     /**
      * Constructor vacío de la clase Pelicula.
@@ -18,20 +30,32 @@ public class Pelicula {
     /**
      * Constructor de la clase Pelicula.
      *
-     * @param codigo código de la película
-     * @param nombre título de la película
-     * @param genero género cinematográfico de la película
+     * @param codigo          código de la película
+     * @param nombre          título de la película
+     * @param genero          género cinematográfico de la película
      * @param duracionMinutos duración de la película en minutos
      */
     public Pelicula(String codigo, String nombre, Genero genero, int duracionMinutos) {
+        this(codigo, nombre, genero, Clasificacion.TODOS, duracionMinutos);
+    }
+
+    /**
+     * Constructor de película con clasificación por edades.
+     */
+    public Pelicula(String codigo, String nombre, Genero genero, Clasificacion clasificacion, int duracionMinutos) {
         this();
         this.codigo = codigo;
         this.nombre = nombre;
         this.genero = genero;
+        this.clasificacion = clasificacion;
         this.duracionMinutos = duracionMinutos;
+        this.clasificacion = clasificacion;
+        this.listPeliculaFunciones = new ArrayList<>();
     }
 
-    /** Marca la película como no disponible. */
+    /**
+     * Marca la película como no disponible.
+     */
     public void deshabilitar() {
         estado = EstadoPelicula.NO_DISPONIBLE;
     }
@@ -76,9 +100,26 @@ public class Pelicula {
         this.estado = estado;
     }
 
+    public Clasificacion getClasificacion() {
+        return clasificacion;
+    }
+
+    public void setClasificacion(Clasificacion clasificacion) {
+        this.clasificacion = clasificacion;
+    }
+
+    public List<Funcion> getListPeliculaFunciones() {
+        return listPeliculaFunciones;
+    }
+
+    public void setListPeliculaFunciones(List<Funcion> listPeliculaFunciones) {
+        this.listPeliculaFunciones = listPeliculaFunciones;
+    }
+
     @Override
     public String toString() {
         return "Pelicula{codigo='" + codigo + "', nombre='" + nombre + "', genero=" + genero
+                + ", clasificacion=" + clasificacion
                 + ", duracionMinutos=" + duracionMinutos + ", estado=" + estado + "}";
     }
 }

@@ -1,7 +1,13 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoCliente;
+
 public class Tarifa {
+
+    //Relaciones de la clase Tarifa
     private TipoCliente tipoCliente;
+
+    //Atributos de la clase tarifa
     private double valor;
 
     /**

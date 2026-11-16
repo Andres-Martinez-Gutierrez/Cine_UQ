@@ -1,11 +1,22 @@
 package uniquindio.edu.co.cineuq.model;
 
+import uniquindio.edu.co.cineuq.model.enumeraciones.EstadoSala;
+import uniquindio.edu.co.cineuq.model.enumeraciones.TipoSala;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Sala {
+    //Atributos de la clase Sala
     private String codigo;
     private String nombre;
     private int capacidad;
+
+    //Relaciones de la clase Sala
     private TipoSala tipo;
     private EstadoSala estado;
+    private List<Asiento> listSalaAientos;
+    private List<Funcion> listSalaFunciones;
 
     /**
      * Constructor vacío de la clase Sala.
@@ -29,6 +40,8 @@ public class Sala {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tipo = tipo;
+        this.listSalaAientos = new ArrayList<>();
+        this.listSalaFunciones = new ArrayList<>();
     }
 
     /** Marca la sala como fuera de servicio. */
@@ -84,6 +97,22 @@ public class Sala {
 
     public void setEstado(EstadoSala estado) {
         this.estado = estado;
+    }
+
+    public List<Asiento> getListSalaAientos() {
+        return listSalaAientos;
+    }
+
+    public void setListSalaAientos(List<Asiento> listSalaAientos) {
+        this.listSalaAientos = listSalaAientos;
+    }
+
+    public List<Funcion> getListSalaFunciones() {
+        return listSalaFunciones;
+    }
+
+    public void setListSalaFunciones(List<Funcion> listSalaFunciones) {
+        this.listSalaFunciones = listSalaFunciones;
     }
 
     @Override
