@@ -130,13 +130,13 @@ public class Operador extends Usuario {
         int cantidadAsientos = asientosSeleccionados.size();
         Cobro cobro = new Cobro(valorEntrada * cantidadAsientos, recargoSala * cantidadAsientos, 0);
 
-        // 1. Instanciamos la venta con el orden EXACTO que pide tu constructor, enviando null en Producto al final
+        // Se crea la venta activa; el producto va en null porque esta venta es solo de entradas.
         Venta venta = new Venta(EstadoVenta.ACTIVA, funcion, cliente, LocalDateTime.now(), generarCodigo(), null);
 
-        // 2. Agregamos el cobro a la lista de cobros de la venta
+        // Se agrega el cobro con el valor de las entradas y el recargo de la sala.
         venta.getListVentaCobros().add(cobro);
 
-        // 3. Asignamos los asientos seleccionados usando el método setter correcto de tu clase Venta
+        // Se asocian a la venta los asientos que el cliente escogió.
         venta.setListVentaAsientofun(asientosSeleccionados);
 
 

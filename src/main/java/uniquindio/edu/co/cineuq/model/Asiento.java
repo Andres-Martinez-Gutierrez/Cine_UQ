@@ -11,7 +11,7 @@ public class Asiento {
     private Boleta boleta;
 
     //Relaciones de la clase Asiento
-    private List<Asiento> listAsientofunAsiento;
+    private List<AsientoFuncion> listAsientoAsientofun;
 
     /**
      * Constructor vacío de la clase Asiento.
@@ -26,14 +26,14 @@ public class Asiento {
      * @param codigo código del asiento (fila y número, por ejemplo "A5")
      * @param fila letra de la fila del asiento
      * @param numero número del asiento dentro de su fila
-     * @param boleta comprobante de tu asiento
+     * @param boleta boleta asociada al asiento
      */
     public Asiento(String codigo, char fila, int numero, Boleta boleta) {
         this.codigo = codigo;
         this.fila = fila;
         this.numero = numero;
         this.boleta = boleta;
-        this.listAsientofunAsiento = new ArrayList<>();
+        this.listAsientoAsientofun = new ArrayList<>();
     }
 
     public Boleta getBoleta() {
@@ -68,12 +68,12 @@ public class Asiento {
         this.numero = numero;
     }
 
-    public List<Asiento> getListAsientofunAsiento() {
-        return listAsientofunAsiento;
+    public List<AsientoFuncion> getListAsientoAsientofun() {
+        return listAsientoAsientofun;
     }
 
-    public void setListAsientofunAsiento(List<Asiento> listAsientofunAsiento) {
-        this.listAsientofunAsiento = listAsientofunAsiento;
+    public void setListAsientoAsientofun(List<AsientoFuncion> listAsientoAsientofun) {
+        this.listAsientoAsientofun = listAsientoAsientofun;
     }
 
     @Override
@@ -82,8 +82,8 @@ public class Asiento {
                 "codigo='" + codigo + '\'' +
                 ", fila=" + fila +
                 ", numero=" + numero +
-                ", theAsientoBoleta=" + boleta +
-                ", listAsientofunAsiento=" + listAsientofunAsiento +
+                ", boleta=" + boleta +
+                ", asientosEnFunciones=" + (listAsientoAsientofun == null ? 0 : listAsientoAsientofun.size()) +
                 '}';
     }
 }

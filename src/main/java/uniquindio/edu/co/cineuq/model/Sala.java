@@ -15,7 +15,7 @@ public class Sala {
     //Relaciones de la clase Sala
     private TipoSala tipo;
     private EstadoSala estado;
-    private List<Asiento> listSalaAientos;
+    private List<Asiento> listSalaAsientos;
     private List<Funcion> listSalaFunciones;
 
     /**
@@ -40,7 +40,7 @@ public class Sala {
         this.nombre = nombre;
         this.capacidad = capacidad;
         this.tipo = tipo;
-        this.listSalaAientos = new ArrayList<>();
+        this.listSalaAsientos = new ArrayList<>();
         this.listSalaFunciones = new ArrayList<>();
     }
 
@@ -99,12 +99,12 @@ public class Sala {
         this.estado = estado;
     }
 
-    public List<Asiento> getListSalaAientos() {
-        return listSalaAientos;
+    public List<Asiento> getListSalaAsientos() {
+        return listSalaAsientos;
     }
 
-    public void setListSalaAientos(List<Asiento> listSalaAientos) {
-        this.listSalaAientos = listSalaAientos;
+    public void setListSalaAsientos(List<Asiento> listSalaAsientos) {
+        this.listSalaAsientos = listSalaAsientos;
     }
 
     public List<Funcion> getListSalaFunciones() {
