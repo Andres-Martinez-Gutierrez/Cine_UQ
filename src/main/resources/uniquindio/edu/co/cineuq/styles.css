@@ -507,3 +507,40 @@
     -fx-text-fill: #a32323;
     -fx-font-size: 13px;
 }
+/* ===== AJUSTES MAPA DE ASIENTOS (agregado al final, no modifica lo anterior) ===== */
+
+/* Asientos más grandes */
+.seat-available,
+.seat-selected,
+.seat-occupied {
+    -fx-min-width: 46px;
+    -fx-min-height: 42px;
+    -fx-font-size: 12px;
+    -fx-background-radius: 7px;
+    -fx-border-radius: 7px;
+}
+
+/* Letra de la fila (A, B, C...) más grande */
+.seat-row-label {
+    -fx-min-width: 24px;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+/* Barra de "PANTALLA" más grande */
+.screen-label {
+    -fx-font-size: 13px;
+    -fx-padding: 10px;
+}
+
+/* Grilla de asientos centrada dentro del panel (solo dentro de tarjetas) */
+.module-card > .grid-pane {
+    -fx-alignment: top-center;
+}
+
+/* Panel "Tu selección" más angosto para que los asientos tengan más espacio */
+.purchase-summary {
+    -fx-max-width: 240px;
+}
+
+
