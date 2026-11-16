@@ -3,6 +3,7 @@ package uniquindio.edu.co.cineuq.viewController;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -157,26 +158,36 @@ public class CarteleraViewController {
     }
 
     private VBox crearTarjeta(Pelicula pelicula, int indice) {
-        VBox poster = new VBox();
-        poster.setMinHeight(250);
-        poster.setMaxHeight(250);
-        poster.setStyle("-fx-background-color: linear-gradient(to bottom right, "
-                + COLORES_POSTER[indice % COLORES_POSTER.length] + ");");
+        Label clasificacion = etiqueta(
+                Formatos.clasificacion(pelicula.getClasificacion()).toUpperCase(Locale.ROOT), "rating-pill");
+        Region separador = new Region();
+        HBox.setHgrow(separador, Priority.ALWAYS);
+        HBox cabecera = new HBox(8, etiqueta("CINEUQ  ·  EN CARTELERA", "poster-kicker"), separador, clasificacion);
+        cabecera.setAlignment(Pos.CENTER_LEFT);
+        cabecera.setPadding(new Insets(12, 12, 0, 12));
+
         Region espacio = new Region();
         VBox.setVgrow(espacio, Priority.ALWAYS);
-        poster.getChildren().addAll(
-                etiqueta("CINEUQ  ·  EN CARTELERA", "poster-kicker"),
-                espacio,
+        VBox textos = new VBox(4,
                 etiqueta(pelicula.getNombre(), "poster-title"),
-                etiqueta(Formatos.genero(pelicula.getGenero()).toUpperCase(Locale.ROOT), "poster-genre"),
-                etiqueta(Formatos.clasificacion(pelicula.getClasificacion()).toUpperCase(Locale.ROOT), "rating-pill"));
+                etiqueta(Formatos.genero(pelicula.getGenero()).toUpperCase(Locale.ROOT), "poster-genre"));
+        textos.setPadding(new Insets(0, 14, 14, 14));
 
-        VBox detalles = new VBox(6);
+        Region sombra = new Region();
+        sombra.getStyleClass().add("poster-shade");
+        StackPane poster = new StackPane(sombra, new VBox(cabecera, espacio, textos));
+        poster.setMinHeight(250);
+        poster.setPrefHeight(250);
+        poster.setMaxHeight(250);
+        poster.setStyle("-fx-background-color: linear-gradient(to bottom right, "
+                + COLORES_POSTER[indice % COLORES_POSTER.length] + "); -fx-background-radius: 7px 7px 0 0;");
+
+        Button verFunciones = boton("Ver funciones", "primary-button", () -> navegador.mostrarFuncionesDe(pelicula));
+        verFunciones.setMaxWidth(Double.MAX_VALUE);
+        VBox detalles = new VBox(10,
+                etiqueta(pelicula.getDuracionMinutos() + " min  ·  Disponible", "movie-meta"),
+                verFunciones);
         detalles.getStyleClass().add("movie-details");
-        detalles.getChildren().addAll(
-                etiqueta(pelicula.getNombre(), "movie-title"),
-                etiqueta(Formatos.genero(pelicula.getGenero()) + " · " + pelicula.getDuracionMinutos() + " min · Disponible", "movie-meta"),
-                boton("Ver funciones", "primary-button", () -> navegador.mostrarFuncionesDe(pelicula)));
 
         VBox tarjeta = new VBox(0, poster, detalles);
         tarjeta.getStyleClass().add("movie-card");
